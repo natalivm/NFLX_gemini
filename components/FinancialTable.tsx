@@ -2,14 +2,15 @@
 import React from 'react';
 import { ProjectionData } from '../types';
 import { formatVal } from '../services/projectionService';
-import { REV_25, OP_MARGIN_25, FCF_25, SHARES_0, CUR_PRICE } from '../constants';
+import { TICKERS } from '../constants';
 
 interface Props {
   data: ProjectionData;
 }
 
 const FinancialTable: React.FC<Props> = ({ data }) => {
-  const { config, years, revs, ebit, netIncome, fcf, shares, eps, price, priceEnhanced, cagrs, cumReturns, fcfYield } = data;
+  const { ticker, config, years, revs, ebit, netIncome, fcf, shares, eps, priceEnhanced, cagrs } = data;
+  const tDef = TICKERS[ticker];
 
   const Cell = ({ children, header = false, align = 'right', highlight = false, color = '', border = true }: any) => (
     <td className={`
@@ -40,7 +41,7 @@ const FinancialTable: React.FC<Props> = ({ data }) => {
         <h3 className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em]">
           DATA MATRIX // {config.label}
         </h3>
-        <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Post-split Adj.</span>
+        <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Adjusted Matrix</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
@@ -56,55 +57,43 @@ const FinancialTable: React.FC<Props> = ({ data }) => {
             <SectionHeader title="Top Line Metrics" />
             <tr>
               <Cell align="left">Revenue (USD B)</Cell>
-              <Cell>{formatVal(REV_25)}</Cell>
+              <Cell>{formatVal(tDef.rev25)}</Cell>
               {revs.map((r, i) => <Cell key={i}>{formatVal(r)}</Cell>)}
-              <Cell highlight>{cagr5y(revs[4], REV_25)}</Cell>
+              <Cell highlight>{cagr5y(revs[4], tDef.rev25)}</Cell>
             </tr>
             <tr>
               <Cell align="left">Growth YoY (%)</Cell>
-              <Cell>16.0%</Cell>
+              <Cell>-</Cell>
               {config.revGrowth.map((g, i) => <Cell key={i}>{(g * 100).toFixed(1)}%</Cell>)}
               <Cell>-</Cell>
             </tr>
-            <tr>
-              <Cell align="left">Ads Rev Layer</Cell>
-              <Cell>$1.5B</Cell>
-              {config.adRev.map((a, i) => <Cell key={i} color="#10b981" highlight>${a.toFixed(1)}B</Cell>)}
-              <Cell color="#10b981">{cagr5y(config.adRev[4], 1.5)}</Cell>
-            </tr>
+            {config.adRev && (
+              <tr>
+                <Cell align="left">Segment Expansion</Cell>
+                <Cell>$1.5B</Cell>
+                {config.adRev.map((a, i) => <Cell key={i} color="#10b981" highlight>${a.toFixed(1)}B</Cell>)}
+                <Cell color="#10b981">{cagr5y(config.adRev[4], 1.5)}</Cell>
+              </tr>
+            )}
 
             <SectionHeader title="Operational Efficiency" />
             <tr>
               <Cell align="left">Operating Margin</Cell>
-              <Cell>{(OP_MARGIN_25 * 100).toFixed(1)}%</Cell>
+              <Cell>{(tDef.opMargin25 * 100).toFixed(1)}%</Cell>
               {config.opMargin.map((m, i) => <Cell key={i}>{(m * 100).toFixed(1)}%</Cell>)}
-              <Cell color="#3b82f6">+{(config.opMargin[4] - OP_MARGIN_25).toFixed(3)}</Cell>
+              <Cell color="#3b82f6">+{(config.opMargin[4] - tDef.opMargin25).toFixed(3)}</Cell>
             </tr>
             <tr>
-              <Cell align="left">EBIT (Billions)</Cell>
-              <Cell>{formatVal(REV_25 * OP_MARGIN_25)}</Cell>
-              {ebit.map((e, i) => <Cell key={i}>{formatVal(e)}</Cell>)}
-              <Cell>{cagr5y(ebit[4], REV_25 * OP_MARGIN_25)}</Cell>
-            </tr>
-
-            <SectionHeader title="Capital Allocation" />
-            <tr>
-              <Cell align="left">Shares Out. (M)</Cell>
-              <Cell>{SHARES_0}M</Cell>
-              {shares.map((s, i) => <Cell key={i}>{s.toFixed(0)}M</Cell>)}
-              <Cell color="#ef4444">{((shares[4] - SHARES_0) / SHARES_0 * 100).toFixed(1)}%</Cell>
-            </tr>
-            <tr>
-              <Cell align="left">Earnings Per Share</Cell>
-              <Cell>$2.53</Cell>
-              {eps.map((e, i) => <Cell key={i} highlight color="#ff007f">${e.toFixed(2)}</Cell>)}
-              <Cell highlight color="#ff007f">{cagr5y(eps[4], 2.53)}</Cell>
+              <Cell align="left">Free Cash Flow</Cell>
+              <Cell>{formatVal(tDef.rev25 * 0.15)}</Cell>
+              {fcf.map((f, i) => <Cell key={i}>{formatVal(f)}</Cell>)}
+              <Cell>{cagr5y(fcf[4], tDef.rev25 * 0.15)}</Cell>
             </tr>
 
             <SectionHeader title="Alpha Valuation" color="text-amber-500" />
             <tr className="bg-[#ff007f]/5">
               <Cell align="left" highlight border={false}>Target Price (USD)</Cell>
-              <Cell highlight border={false}>${CUR_PRICE.toFixed(2)}</Cell>
+              <Cell highlight border={false}>${tDef.currentPrice.toFixed(2)}</Cell>
               {priceEnhanced.map((p, i) => (
                 <Cell key={i} highlight border={false} color="#ff007f" className="text-sm font-black">${p.toFixed(2)}</Cell>
               ))}

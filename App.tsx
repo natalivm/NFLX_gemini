@@ -2,13 +2,13 @@
 import React, { useState, useMemo } from 'react';
 import { ScenarioType } from './types';
 import { calculateProjection } from './services/projectionService';
-import { CATALYSTS, CUR_PRICE } from './constants';
+import { TICKERS } from './constants';
 import ScenarioSelector from './components/ScenarioSelector';
 import ProjectionChart from './components/ProjectionChart';
-import FinancialTable from './components/FinancialTable';
 import AnalystChat from './components/AnalystChat';
+import ScenarioMetricsCard from './components/ScenarioMetricsCard';
 
-type ViewType = 'home' | 'nflx';
+type ViewType = 'home' | string;
 
 interface StockRow {
   ticker: string;
@@ -20,69 +20,78 @@ interface StockRow {
 
 const STOCKS: StockRow[] = [
   { ticker: 'NFLX', buy: 'YES', value: 'undervalued', fairPrice: '$112-155', active: true },
-  { ticker: 'TKO', buy: 'Maybe', value: 'overvalued', fairPrice: '$185' },
-  { ticker: 'LQDA', buy: 'No', value: 'overvalued', fairPrice: '$14' },
-  { ticker: 'LLY', buy: 'No', value: 'overvalued', fairPrice: '$977' },
-  { ticker: 'APH', buy: 'YES', value: 'fair price', fairPrice: '$155' },
-  { ticker: 'SMCI', buy: 'YES', value: 'undervalued', fairPrice: '43.25' },
-  { ticker: 'ENPH', buy: 'No', value: 'fair price', fairPrice: '$38' },
-  { ticker: 'CRWD', buy: 'Maybe', value: 'undervalued', fairPrice: '$485' },
-  { ticker: 'UBER', buy: 'Maybe', value: 'undervalued', fairPrice: '$75' },
-  { ticker: 'FTNT', buy: 'Maybe', value: 'fair price', fairPrice: '$84' },
-  { ticker: 'PANW', buy: 'No', value: 'overvalued', fairPrice: '$135' },
-  { ticker: 'PINS', buy: 'YES', value: 'undervalued', fairPrice: '$27' },
-  { ticker: 'RBRK', buy: 'Maybe', value: 'fair price', fairPrice: '$48–56' },
-  { ticker: 'KKR', buy: 'YES', value: 'fair price', fairPrice: '$110' },
-  { ticker: 'SPGI', buy: 'No', value: 'overvalued', fairPrice: '$347' },
+  { ticker: 'UBER', buy: 'YES', value: 'undervalued', fairPrice: '$85-185', active: true },
+  { ticker: 'DUOL', buy: 'YES', value: 'undervalued', fairPrice: '$165-210', active: true },
+  { ticker: 'FICO', buy: 'YES', value: 'undervalued', fairPrice: '$1500-1800', active: true },
+  { ticker: 'SMCI', buy: 'YES', value: 'undervalued', fairPrice: '$43.25', active: false },
+  { ticker: 'TKO', buy: 'Maybe', value: 'overvalued', fairPrice: '$185', active: false },
+  { ticker: 'LQDA', buy: 'No', value: 'overvalued', fairPrice: '$14', active: false },
+  { ticker: 'LLY', buy: 'No', value: 'overvalued', fairPrice: '$977', active: false },
+  { ticker: 'APH', buy: 'YES', value: 'fair price', fairPrice: '$155', active: false },
+  { ticker: 'ENPH', buy: 'No', value: 'fair price', fairPrice: '$38', active: false },
+  { ticker: 'CRWD', buy: 'Maybe', value: 'undervalued', fairPrice: '$485', active: false },
+  { ticker: 'FTNT', buy: 'Maybe', value: 'fair price', fairPrice: '$84', active: false },
+  { ticker: 'PANW', buy: 'No', value: 'overvalued', fairPrice: '$135', active: false },
+  { ticker: 'PINS', buy: 'YES', value: 'undervalued', fairPrice: '$27', active: false },
+  { ticker: 'RBRK', buy: 'Maybe', value: 'fair price', fairPrice: '$48–56', active: false },
+  { ticker: 'KKR', buy: 'YES', value: 'fair price', fairPrice: '$110', active: false },
+  { ticker: 'SPGI', buy: 'No', value: 'overvalued', fairPrice: '$347', active: false },
 ];
 
 const App: React.FC = () => {
-  const [view, setView] = useState<ViewType>('home');
+  const [activeTicker, setActiveTicker] = useState<ViewType>('home');
   const [scenario, setScenario] = useState<ScenarioType>(ScenarioType.BASE);
+  const [showEnhancements, setShowEnhancements] = useState(true);
 
-  const allProjections = useMemo(() => ({
-    [ScenarioType.BEAR]: calculateProjection(ScenarioType.BEAR),
-    [ScenarioType.BASE]: calculateProjection(ScenarioType.BASE),
-    [ScenarioType.BULL]: calculateProjection(ScenarioType.BULL),
-  }), []);
+  const tickerDef = activeTicker !== 'home' ? TICKERS[activeTicker] : null;
 
-  const currentProjection = allProjections[scenario];
+  const allProjections = useMemo(() => {
+    if (!tickerDef) return null;
+    return {
+      [ScenarioType.BEAR]: calculateProjection(activeTicker, ScenarioType.BEAR, showEnhancements),
+      [ScenarioType.BASE]: calculateProjection(activeTicker, ScenarioType.BASE, showEnhancements),
+      [ScenarioType.BULL]: calculateProjection(activeTicker, ScenarioType.BULL, showEnhancements),
+    };
+  }, [activeTicker, showEnhancements]);
+
+  const currentProjection = allProjections ? allProjections[scenario] : null;
 
   const investmentConclusion = useMemo(() => {
-    const bearTarget = allProjections.bear.priceEnhanced[4];
-    const baseTarget = allProjections.base.priceEnhanced[4];
-    const bullTarget = allProjections.bull.priceEnhanced[4];
+    if (!allProjections || !tickerDef) return null;
+    const isSpecial = tickerDef.ticker === 'DUOL' || tickerDef.ticker === 'FICO' || tickerDef.ticker === 'UBER';
+    const bearTarget = isSpecial ? allProjections.bear.pricePerShare! : allProjections.bear.priceEnhanced[4];
+    const baseTarget = isSpecial ? allProjections.base.pricePerShare! : allProjections.base.priceEnhanced[4];
+    const bullTarget = isSpecial ? allProjections.bull.pricePerShare! : allProjections.bull.priceEnhanced[4];
     
     const pwAvg = bearTarget * 0.25 + baseTarget * 0.5 + bullTarget * 0.25;
-    const cagr = (Math.pow(pwAvg / CUR_PRICE, 1 / 5) - 1) * 100;
-    const tenKResult = (pwAvg / CUR_PRICE) * 10000;
+    const cagr = (Math.pow(pwAvg / tickerDef.currentPrice, 1 / 5) - 1) * 100;
 
-    return { pwAvg, cagr, tenKResult };
-  }, [allProjections]);
+    return { pwAvg, cagr };
+  }, [allProjections, tickerDef]);
 
-  if (view === 'home') {
+  if (activeTicker === 'home') {
     return (
-      <div className="min-h-screen bg-[#0a1128] flex font-sans">
-        {/* Left Side: Fixed Hero Hook */}
+      <div className="min-h-screen bg-[#0a1128] flex font-sans overflow-hidden">
+        {/* Left Column - Sticky and Centered */}
         <div className="w-1/2 h-screen sticky top-0 bg-[#0a1128] flex items-center justify-center p-12 lg:p-24 overflow-hidden border-r border-slate-800/30">
           <div className="absolute inset-0 opacity-10 pointer-events-none">
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,#ff007f_0%,transparent_60%)]"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#ff007f_0%,transparent_60%)]"></div>
           </div>
-          <div className="z-10 w-full">
-            <h1 className="text-7xl lg:text-9xl font-black text-[#ff007f] tracking-tighter leading-[0.8] text-left select-none animate-pulse">
-              IS it<br />A<br />BUY?
+          <div className="z-10 w-full text-center">
+            <h1 className="text-7xl lg:text-9xl font-black text-[#ff007f] tracking-tighter leading-[0.8] select-none animate-pulse uppercase">
+              IS IT<br />A<br />BUY?
             </h1>
           </div>
         </div>
 
-        {/* Right Side: Simple Elegant List */}
-        <div className="w-1/2 bg-[#0d1630]">
+        {/* Right Column - Scrollable List */}
+        <div className="w-1/2 h-screen bg-[#0d1630] overflow-y-auto">
           <div className="px-12 pt-20 pb-12">
             <div className="text-amber-500 font-black text-[10px] tracking-[0.3em] uppercase mb-2">Alpha Research Group</div>
-            <h2 className="text-slate-400 text-sm font-medium">Evaluating hot stocks on a market every day!</h2>
+            <h2 className="text-slate-400 text-sm font-medium">Evaluating market opportunities with high-conviction quantitative overlays.</h2>
           </div>
           
-          <div className="px-12 pb-24 space-y-2">
+          <div className="px-12 pb-24 space-y-0">
             {STOCKS.map((stock) => {
               const dotColor = 
                 stock.value === 'undervalued' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' :
@@ -92,17 +101,15 @@ const App: React.FC = () => {
               return (
                 <button
                   key={stock.ticker}
-                  onClick={() => stock.active && setView('nflx')}
+                  onClick={() => stock.active && setActiveTicker(stock.ticker)}
                   disabled={!stock.active}
                   className={`
-                    w-full flex items-center justify-between p-4 group transition-all duration-300 rounded-lg
-                    ${stock.active 
-                      ? 'hover:bg-slate-800/40 cursor-pointer' 
-                      : 'opacity-40 cursor-not-allowed'}
+                    w-full flex items-center justify-between py-6 px-4 group transition-all duration-300 border-b border-slate-800/50 last:border-0
+                    ${stock.active ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed'}
                   `}
                 >
                   <div className="flex items-center gap-6">
-                    <span className={`text-5xl lg:text-6xl font-black transition-colors ${stock.active ? 'text-white group-hover:text-amber-500' : 'text-slate-600'}`}>
+                    <span className={`text-5xl lg:text-6xl font-black transition-colors text-slate-500 group-hover:text-white`}>
                       {stock.ticker}
                     </span>
                     <div className="flex flex-col items-start leading-none gap-1">
@@ -117,187 +124,229 @@ const App: React.FC = () => {
                         OPEN ANALYSIS →
                       </span>
                     )}
-                    <div className={`w-3 h-3 rounded-full ${dotColor}`}></div>
+                    <div className={`w-3 h-3 rounded-full flex-shrink-0 transition-transform group-hover:scale-125 ${dotColor}`}></div>
                   </div>
                 </button>
               );
             })}
-          </div>
-
-          {/* Footer inside right side */}
-          <div className="px-12 py-8 border-t border-slate-800/50 bg-[#0b1227]/50 sticky bottom-0 backdrop-blur-sm">
-            <p className="text-[10px] text-slate-600 uppercase font-bold tracking-widest text-center">
-              Real-time quantitative overlay • Professional Grade Analytics
-            </p>
           </div>
         </div>
       </div>
     );
   }
 
+  if (!tickerDef || !currentProjection || !allProjections || !investmentConclusion) return null;
+
+  const accentColor = tickerDef.themeColor;
+  const isSpecial = tickerDef.ticker === 'DUOL' || tickerDef.ticker === 'FICO' || tickerDef.ticker === 'UBER';
+
+  const usd = (n: number) => "$" + n.toFixed(2);
+  const pct = (n: number) => (n * 100).toFixed(1) + "%";
+
   return (
-    <div className="min-h-screen bg-[#0a1128] text-slate-100 selection:bg-[#ff007f]/30 font-sans relative overflow-x-hidden">
-      {/* Decorative Glow Elements */}
-      <div className="absolute top-0 right-0 w-[50vw] h-[50vh] bg-[radial-gradient(circle_at_80%_20%,#ff007f15_0%,transparent_70%)] pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-[50vw] h-[50vh] bg-[radial-gradient(circle_at_20%_80%,#fbbf2408_0%,transparent_70%)] pointer-events-none"></div>
+    <div className="min-h-screen bg-[#0a1128] text-slate-100 selection:bg-slate-700/50 font-sans relative overflow-x-hidden">
+      <div 
+        className="absolute top-0 right-0 w-[50vw] h-[50vh] opacity-20 pointer-events-none"
+        style={{ background: `radial-gradient(circle_at_80%_20%, ${accentColor} 0%, transparent 70%)` }}
+      ></div>
 
       <div className="max-w-7xl mx-auto px-4 py-12 lg:px-8 relative z-10">
-        
-        {/* Top Nav Back Link */}
-        <div className="mb-8">
+        <div className="mb-8 flex flex-wrap justify-between items-center gap-4">
           <button 
-            onClick={() => setView('home')}
-            className="flex items-center gap-3 text-[10px] font-black text-[#ff007f] hover:text-white uppercase tracking-[0.2em] transition-all group px-4 py-2 bg-[#ff007f]/5 rounded-full border border-[#ff007f]/20"
+            onClick={() => { setActiveTicker('home'); }}
+            className="flex items-center gap-3 text-[10px] font-black hover:text-white uppercase tracking-[0.2em] transition-all group px-4 py-2 bg-slate-800/50 rounded-full border"
+            style={{ color: accentColor, borderColor: `${accentColor}44` }}
           >
             <span className="group-hover:-translate-x-1 transition-transform">←</span>
             Return to Universe
           </button>
         </div>
 
-        {/* Header Section */}
-        <header className="mb-12 border-b-2 border-[#ff007f] pb-8 relative">
-          <div className="absolute top-0 right-0 text-[10px] font-black text-[#ff007f]/40 uppercase tracking-[0.4em] leading-none pointer-events-none select-none">
-            EYES ONLY // QUANT ANALYSIS
-          </div>
+        <header className="mb-12 border-b-2 pb-8 relative" style={{ borderColor: accentColor }}>
           <div className="flex items-center gap-3 text-[10px] font-black text-amber-500 uppercase tracking-[0.4em] mb-6">
             <span className="w-12 h-[2px] bg-amber-500/50"></span>
-            NFLX ALPHA RESEARCH UNIT
+            {tickerDef.name.toUpperCase()} {isSpecial ? "ENHANCED DCF" : "ALPHA RESEARCH"}
           </div>
           <h1 className="text-5xl lg:text-7xl font-black text-white mb-6 tracking-tighter leading-none">
-            NFLX <span className="text-[#ff007f] drop-shadow-[0_0_15px_rgba(255,0,127,0.4)]">2030</span>
+            {tickerDef.ticker} <span style={{ color: accentColor }}>2030</span>
           </h1>
           
-          <div className="flex flex-wrap gap-4">
-            <div className="flex items-center gap-3 px-5 py-2 bg-[#0d1630] border border-slate-800 rounded-lg shadow-inner">
+          <div className="flex flex-wrap gap-4 items-center">
+            <div className="flex items-center gap-3 px-5 py-2 bg-[#0d1630] border border-slate-800 rounded-lg">
               <span className="text-amber-500 font-black text-[10px] uppercase tracking-widest">Entry</span>
-              <span className="text-white mono text-lg font-bold">${CUR_PRICE.toFixed(2)}</span>
+              <span className="text-white mono text-lg font-bold">${tickerDef.currentPrice.toFixed(2)}</span>
             </div>
-            <div className="flex items-center gap-3 px-5 py-2 bg-[#0d1630] border border-slate-800 rounded-lg shadow-inner">
-              <span className="text-[#ff007f] font-black text-[10px] uppercase tracking-widest">Rating</span>
+            <div className="flex items-center gap-3 px-5 py-2 bg-[#0d1630] border border-slate-800 rounded-lg">
+              <span className="font-black text-[10px] uppercase tracking-widest" style={{ color: accentColor }}>Rating</span>
               <span className="text-white text-lg font-bold">STRONG BUY</span>
             </div>
-            <div className="flex items-center gap-3 px-5 py-2 bg-[#0d1630] border border-slate-800 rounded-lg shadow-inner">
-              <span className="text-slate-500 font-black text-[10px] uppercase tracking-widest">Horizon</span>
-              <span className="text-white text-lg font-bold">5 YEARS</span>
-            </div>
+            {isSpecial && (
+              <div className="flex items-center gap-3 ml-2">
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{tickerDef.ticker === 'UBER' ? 'Extra DCF' : 'Enhancements'}</span>
+                <button 
+                  onClick={() => setShowEnhancements(!showEnhancements)}
+                  className={`px-6 py-3 rounded-xl text-[10px] font-black transition-all duration-500 border ${showEnhancements ? 'bg-indigo-600 border-indigo-500 text-white scale-110 shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'bg-slate-800 border-slate-700 text-slate-400 scale-100 opacity-70'}`}
+                >
+                  {showEnhancements ? "★ ACTIVE" : "DISABLED"}
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
-        {/* Narrative Box */}
-        <div className={`mb-10 p-8 rounded-2xl border-l-[6px] transition-all duration-700 bg-[#0d1630]/80 backdrop-blur-md border-[#ff007f] shadow-[0_0_40px_rgba(0,0,0,0.3)] relative group`}>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#ff007f05] to-transparent pointer-events-none rounded-2xl"></div>
-          <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-6">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-[#ff007f] text-white shadow-[0_0_15px_rgba(255,0,127,0.5)]">
-                  Intelligence Core
-                </span>
-                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">PROBABILITY WEIGHTED: 50%</span>
-              </div>
-              <h2 className="text-3xl font-black text-white tracking-tight">{currentProjection.config.label}</h2>
-            </div>
-            <div className="text-right">
-              <div className="text-[10px] text-amber-500 font-black uppercase tracking-widest mb-1">Target Price High</div>
-              <div className="text-5xl lg:text-6xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
-                ${currentProjection.priceEnhanced[4].toFixed(0)}
-              </div>
-            </div>
-          </div>
-          <p className="text-slate-300 text-lg leading-relaxed max-w-5xl font-medium border-t border-slate-800/50 pt-6">
-            <span className="text-[#ff007f] font-black text-3xl leading-none mr-2">"</span>
-            {currentProjection.config.desc}
-            <span className="text-[#ff007f] font-black text-3xl leading-none ml-2">"</span>
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 mb-12">
+        {/* Focus exclusively on Summary view */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-3 space-y-10">
-            <div className="bg-[#0d1630]/60 p-2 rounded-xl inline-block border border-slate-800">
+            {/* Investment Context Section */}
+            <div className="p-8 rounded-2xl border-l-[6px] bg-[#0d1630]/80 shadow-2xl" style={{ borderLeftColor: '#f59e0b' }}>
+              <h3 className="text-[10px] font-black text-amber-500 uppercase tracking-[0.4em] mb-4">INVESTMENT CONTEXT // QUANT OVERLAY</h3>
+              <div className="flex flex-col gap-6">
+                <p className="text-xl text-white font-bold leading-tight">
+                  {tickerDef.ticker === 'FICO' 
+                    ? "FICO is a monopoly-grade franchise with 90%+ market share and 54% operating margins. Q1 FY26 showed +29% Scores growth."
+                    : tickerDef.ticker === 'DUOL' 
+                    ? "DUOL is a high-margin digital subscription platform with a strong brand moat and global scale. However, the quantitative signal is flashing caution."
+                    : tickerDef.ticker === 'UBER'
+                    ? "Uber is transitioning into a high-margin advertising and autonomous platform. While technicals are currently weak (RS 16), the fundamental re-rating logic remains strong."
+                    : `${tickerDef.ticker} represents a core high-conviction position in our ${tickerDef.sector} portfolio.`}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl">
+                    <div className="text-[10px] font-black text-red-500 uppercase mb-1">RS Rating</div>
+                    <div className="text-2xl font-black text-white">{tickerDef.ticker === 'FICO' ? '16' : tickerDef.ticker === 'DUOL' ? '4' : tickerDef.ticker === 'UBER' ? '16' : 'N/A'}</div>
+                    <div className="text-[9px] text-red-400 font-bold uppercase mt-1 text-center">Institutional Momentum Score</div>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                    <div className="text-[10px] font-black text-slate-500 uppercase mb-1">Momentum</div>
+                    <div className="text-lg font-black text-white">{tickerDef.ticker === 'NFLX' ? 'BULLISH' : 'BROKEN'}</div>
+                    <div className="text-[9px] text-slate-400 font-bold uppercase mt-1">Technical Overlay</div>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                    <div className="text-[10px] font-black text-slate-500 uppercase mb-1">Moat Strength</div>
+                    <div className="text-lg font-black text-white">MONOPOLISTIC</div>
+                    <div className="text-[9px] text-slate-400 font-bold uppercase mt-1">Qualitative Alpha</div>
+                  </div>
+                </div>
+                <div className="border-t border-slate-800 pt-4">
+                  <p className="text-amber-500 text-sm font-black italic">
+                    {tickerDef.ticker === 'UBER'
+                      ? "AV platform dominance + aggressive buybacks creates an asymmetric upside scenario."
+                      : tickerDef.ticker === 'FICO' 
+                      ? "Maximum pessimism + strong fundamentals = high probability of outsized forward returns."
+                      : "This is now a fundamental re-rating story, not a momentum stock."}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#0d1630]/60 p-4 rounded-2xl inline-block border border-slate-800 shadow-xl">
               <ScenarioSelector active={scenario} onChange={setScenario} />
             </div>
-            
-            <div className="rounded-2xl border border-slate-800 bg-[#0d1630]/40 overflow-hidden backdrop-blur-sm">
-              <ProjectionChart currentScenario={scenario} allProjections={allProjections} />
+            <div className="rounded-2xl border border-slate-800 bg-[#0d1630]/40 overflow-hidden shadow-inner">
+              <ProjectionChart currentScenario={scenario} allProjections={allProjections as any} />
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-[#0d1630]/40 overflow-hidden backdrop-blur-sm">
-              <FinancialTable data={currentProjection} />
+            {/* Investors Summary Section */}
+            <div className="bg-[#0d1630]/80 p-8 rounded-2xl border border-slate-800 shadow-xl">
+               <h3 className="text-[10px] font-black text-amber-500 uppercase tracking-[0.4em] mb-6 flex items-center gap-3">
+                 <span className="w-10 h-[2px] bg-amber-500/50"></span>
+                 INVESTOR SUMMARY // Q1 2026
+               </h3>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                 <div>
+                   <h4 className="text-white font-black text-sm mb-4 uppercase tracking-wider">The Bull Narrative</h4>
+                   <ul className="space-y-4">
+                     <li className="flex gap-4">
+                       <span className="text-green-500 font-black">01</span>
+                       <p className="text-slate-400 text-xs leading-relaxed italic">
+                         {tickerDef.ticker === 'FICO' 
+                           ? '"FICO 10T adoption creates a multi-year tailwind for higher unit pricing in mortgage and auto pulls."' 
+                           : tickerDef.ticker === 'UBER'
+                           ? '"AV platform dominance with Waymo/Tesla partnerships creates the global autonomous operating system."'
+                           : '"Transition to global platform unlocks a 4x TAM expansion with zero CAC friction."'}
+                       </p>
+                     </li>
+                     <li className="flex gap-4">
+                       <span className="text-green-500 font-black">02</span>
+                       <p className="text-slate-400 text-xs leading-relaxed italic">
+                         {tickerDef.ticker === 'FICO' 
+                           ? '"Software Platform ARR hitting 50%+ of mix re-rates the multiple toward SaaS data peers."' 
+                           : tickerDef.ticker === 'UBER'
+                           ? '"Aggressive $27B buyback program targets 7.5% share count reduction over 5 years."'
+                           : '"AI-driven margin flywheel allows personalized content at near-zero marginal cost."'}
+                       </p>
+                     </li>
+                   </ul>
+                 </div>
+                 <div>
+                   <h4 className="text-white font-black text-sm mb-4 uppercase tracking-wider">The Risk Overlay</h4>
+                   <ul className="space-y-4">
+                     <li className="flex gap-4">
+                       <span className="text-red-500 font-black">01</span>
+                       <p className="text-slate-400 text-xs leading-relaxed italic">
+                          {tickerDef.ticker === 'FICO' 
+                            ? '"Regulatory intervention regarding credit scoring monopolization remains the primary tail risk."' 
+                            : tickerDef.ticker === 'UBER'
+                            ? '"Regulatory pressures force driver reclassification, potentially killing logistics margins."'
+                            : '"Potential commoditization of core content by LLMs demands winning on gamification loops."'}
+                       </p>
+                     </li>
+                     <li className="flex gap-4">
+                       <span className="text-red-500 font-black">02</span>
+                       <p className="text-slate-400 text-xs leading-relaxed italic">
+                          {tickerDef.ticker === 'FICO' 
+                            ? '"High leverage with $3.2B debt creates sensitivity to sustained higher-for-longer rate environments."' 
+                            : tickerDef.ticker === 'UBER'
+                            ? '"AV competitors bypass platform by building their own consumer apps."'
+                            : '"SBC-driven dilution remains a hurdle for per-share value accretion."'}
+                       </p>
+                     </li>
+                   </ul>
+                 </div>
+               </div>
             </div>
+
+            {/* Scenario Metrics Grid */}
+            {isSpecial && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-10">
+                <ScenarioMetricsCard data={allProjections!.bear} currentPrice={tickerDef.currentPrice} />
+                <ScenarioMetricsCard data={allProjections!.base} currentPrice={tickerDef.currentPrice} />
+                <ScenarioMetricsCard data={allProjections!.bull} currentPrice={tickerDef.currentPrice} />
+              </div>
+            )}
           </div>
 
           <div className="space-y-8">
             <div className="bg-[#0d1630] border border-slate-800 rounded-2xl p-8 shadow-2xl sticky top-8">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 mb-8 flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(251,191,36,0.5)]"></span>
-                Key Projections
-              </h3>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 mb-8">Valuation Metrics</h3>
               <div className="space-y-6">
                 {[
-                  { label: '5Y Total Return', value: `+${currentProjection.cumReturns[4].toFixed(0)}%`, color: 'text-white' },
-                  { label: 'Implied CAGR', value: `${currentProjection.cagrs[4].toFixed(1)}%`, color: 'text-[#ff007f]' },
-                  { label: '2030E Multiple', value: `${currentProjection.config.peMultiple[4]}x`, color: 'text-white' },
-                  { label: '2030E EPS', value: `$${currentProjection.eps[4].toFixed(2)}`, color: 'text-amber-500' },
+                  { label: tickerDef.ticker === 'UBER' ? '5Y CAGR' : '5Y Total Return', value: isSpecial ? (tickerDef.ticker === 'UBER' ? pct(currentProjection.config.hardcodedTrajectory![4] / tickerDef.currentPrice - 1) : pct(currentProjection.cumReturns[0]/100)) : pct(currentProjection.cumReturns[4]/100), color: 'text-white' },
+                  { label: 'WACC', value: isSpecial ? (tickerDef.ticker === 'UBER' ? (currentProjection.config.waccRange || '7.5%') : pct(currentProjection.w!)) : '10.5%', color: accentColor },
+                  { label: 'Terminal Growth', value: isSpecial ? pct(currentProjection.config.termGrowth || (tickerDef.ticker === 'UBER' ? 0.028 : 0.03)) : '3.0%', color: 'text-white' },
                 ].map((item, idx) => (
                   <div key={idx} className="flex flex-col gap-1 border-b border-slate-800 pb-4 last:border-0 last:pb-0">
                     <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">{item.label}</span>
-                    <span className={`text-3xl font-black ${item.color} leading-none`}>{item.value}</span>
+                    <span className={`text-3xl font-black leading-none`} style={{ color: item.color }}>{item.value}</span>
                   </div>
                 ))}
               </div>
             </div>
-
             <AnalystChat scenario={scenario} projection={currentProjection} />
           </div>
         </div>
 
-        {/* Catalyst Grid */}
-        <div className="bg-[#0d1630]/40 border border-slate-800 rounded-2xl p-10 mb-12 backdrop-blur-md">
-          <h3 className="text-[10px] font-black text-[#ff007f] uppercase tracking-[0.3em] mb-10 flex items-center gap-4">
-            <span className="w-10 h-[1px] bg-[#ff007f]"></span>
-            EXECUTION TIMELINE
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            {CATALYSTS.map((c, i) => (
-              <div key={i} className="bg-[#0a1128] rounded-xl p-6 border border-slate-800 transition-all hover:border-[#ff007f]/40 hover:-translate-y-1 group h-full">
-                <div className="text-4xl font-black text-white mb-2 group-hover:text-[#ff007f] transition-colors">{c.yr}</div>
-                <div className={`text-[10px] font-black mb-4 px-2 py-0.5 rounded-full inline-block ${c.risk === 'HIGH' ? 'bg-red-500/20 text-red-500' : c.risk === 'MEDIUM' ? 'bg-amber-500/20 text-amber-500' : 'bg-green-500/20 text-green-500'}`}>
-                   {c.risk} RISK
-                </div>
-                <div className="space-y-3">
-                  {c.events.map((e, j) => (
-                    <div key={j} className="text-xs text-slate-400 leading-relaxed font-medium pb-2 border-b border-slate-800/50 last:border-0">
-                      {e}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Conclusion Hero */}
-        <div className="relative group overflow-hidden rounded-2xl p-1 bg-[#0d1630]">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#ff007f] via-amber-500 to-[#ff007f] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+        <div className="mt-12 group relative rounded-2xl p-1 bg-[#0d1630] shadow-2xl">
+          <div className="absolute inset-0 opacity-20" style={{ background: `linear-gradient(90deg, ${accentColor}, #fbbf24, ${accentColor})` }}></div>
           <div className="relative bg-[#0d1630] rounded-2xl p-10 lg:p-14">
-            <h3 className="text-[10px] font-black text-[#ff007f] uppercase tracking-[0.4em] mb-8">
-              FINAL INVESTMENT VERDICT
-            </h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] mb-8" style={{ color: accentColor }}>FINAL INVESTMENT VERDICT</h3>
             <div className="text-2xl lg:text-4xl text-white font-black leading-tight max-w-5xl mb-8">
-              Our probability-weighted target of <span className="text-white underline decoration-[#ff007f] decoration-4 underline-offset-8">${investmentConclusion.pwAvg.toFixed(0)}</span> represents a <span className="text-amber-500">{investmentConclusion.cagr.toFixed(1)}% CAGR</span> over the next 5 years.
+              Our {showEnhancements ? (tickerDef.ticker === 'UBER' ? "Enhanced (Extra DCF)" : "Enhanced") : (tickerDef.ticker === 'UBER' ? "Conservative (DCF)" : "Baseline")} target of <span className="text-white underline decoration-4 underline-offset-8" style={{ textDecorationColor: accentColor }}>
+                {isSpecial ? usd(currentProjection.pricePerShare!) : usd(currentProjection.priceEnhanced[4])}
+              </span> represents an asymmetric risk/reward opportunity.
             </div>
-            <p className="text-slate-400 text-lg max-w-4xl font-medium">
-              At an entry price of ${CUR_PRICE.toFixed(2)}, Netflix provides a rare combination of platform optionality, margin expansion, and shareholder yield that current market sentiment is significantly discounting. 
-            </p>
           </div>
         </div>
-
-        <footer className="mt-20 pt-10 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-600 text-[10px] uppercase tracking-[0.4em] font-black">
-          <div>QUANT ALPHA CORE // V.2026.02</div>
-          <div className="flex gap-8">
-            <span className="hover:text-white cursor-pointer transition-colors">Proprietary Model</span>
-            <span className="hover:text-white cursor-pointer transition-colors">GS TMT Adjusted</span>
-          </div>
-        </footer>
       </div>
     </div>
   );

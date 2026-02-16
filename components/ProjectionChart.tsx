@@ -7,12 +7,12 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  Legend, 
   ResponsiveContainer, 
   ReferenceLine 
 } from 'recharts';
 import { ScenarioType, ProjectionData } from '../types';
-import { CUR_PRICE, CONFIGS } from '../constants';
+// Fix: Removed CUR_PRICE and imported TICKERS to support dynamic ticker price lookups
+import { TICKERS } from '../constants';
 
 interface Props {
   currentScenario: ScenarioType;
@@ -20,6 +20,10 @@ interface Props {
 }
 
 const ProjectionChart: React.FC<Props> = ({ currentScenario, allProjections }) => {
+  // Fix: Dynamically resolve the current price for the active ticker from the TICKERS registry
+  const ticker = allProjections[currentScenario].ticker;
+  const currentPrice = TICKERS[ticker].currentPrice;
+
   const data = [0, 1, 2, 3, 4].map((i) => {
     return {
       year: 2026 + i,
@@ -88,8 +92,9 @@ const ProjectionChart: React.FC<Props> = ({ currentScenario, allProjections }) =
               tick={{ fontWeight: 800 }}
             />
             <Tooltip content={<CustomTooltip />} />
+            {/* Fix: Using dynamic currentPrice derived from TICKERS registry */}
             <ReferenceLine 
-              y={CUR_PRICE} 
+              y={currentPrice} 
               stroke="#fbbf24" 
               strokeDasharray="4 4" 
               strokeWidth={2}
