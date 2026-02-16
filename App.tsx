@@ -6,6 +6,7 @@ import { CATALYSTS, CUR_PRICE } from './constants';
 import ScenarioSelector from './components/ScenarioSelector';
 import ProjectionChart from './components/ProjectionChart';
 import FinancialTable from './components/FinancialTable';
+import AnalystChat from './components/AnalystChat';
 
 type ViewType = 'home' | 'nflx';
 
@@ -135,118 +136,137 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500/30 font-sans">
-      <div className="max-w-7xl mx-auto px-4 py-12 lg:px-8">
+    <div className="min-h-screen bg-[#0a1128] text-slate-100 selection:bg-[#ff007f]/30 font-sans relative overflow-x-hidden">
+      {/* Decorative Glow Elements */}
+      <div className="absolute top-0 right-0 w-[50vw] h-[50vh] bg-[radial-gradient(circle_at_80%_20%,#ff007f15_0%,transparent_70%)] pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[50vw] h-[50vh] bg-[radial-gradient(circle_at_20%_80%,#fbbf2408_0%,transparent_70%)] pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto px-4 py-12 lg:px-8 relative z-10">
         
         {/* Top Nav Back Link */}
-        <div className="mb-6">
+        <div className="mb-8">
           <button 
             onClick={() => setView('home')}
-            className="flex items-center gap-2 text-[10px] font-black text-slate-500 hover:text-amber-500 uppercase tracking-widest transition-colors group"
+            className="flex items-center gap-3 text-[10px] font-black text-[#ff007f] hover:text-white uppercase tracking-[0.2em] transition-all group px-4 py-2 bg-[#ff007f]/5 rounded-full border border-[#ff007f]/20"
           >
             <span className="group-hover:-translate-x-1 transition-transform">←</span>
-            Return to Portfolio Universe
+            Return to Universe
           </button>
         </div>
 
         {/* Header Section */}
-        <header className="mb-10 border-b-2 border-amber-600 pb-6 relative">
-          <div className="absolute top-0 right-0 text-[10px] font-black text-amber-600/50 uppercase tracking-widest leading-none pointer-events-none select-none">
-            CONFIDENTIAL // FOR INSTITUTIONAL USE ONLY
+        <header className="mb-12 border-b-2 border-[#ff007f] pb-8 relative">
+          <div className="absolute top-0 right-0 text-[10px] font-black text-[#ff007f]/40 uppercase tracking-[0.4em] leading-none pointer-events-none select-none">
+            EYES ONLY // QUANT ANALYSIS
           </div>
-          <div className="flex items-center gap-2 text-[10px] font-black text-amber-500 uppercase tracking-[0.3em] mb-4">
-            <span className="w-8 h-[2px] bg-amber-500"></span>
-            Institutional Equity Research Division
+          <div className="flex items-center gap-3 text-[10px] font-black text-amber-500 uppercase tracking-[0.4em] mb-6">
+            <span className="w-12 h-[2px] bg-amber-500/50"></span>
+            NFLX ALPHA RESEARCH UNIT
           </div>
-          <h1 className="text-4xl lg:text-5xl font-black text-white mb-4 tracking-tighter">
-            NFLX <span className="text-slate-500 font-medium">5-Year Projected Value (2026–2030)</span>
+          <h1 className="text-5xl lg:text-7xl font-black text-white mb-6 tracking-tighter leading-none">
+            NFLX <span className="text-[#ff007f] drop-shadow-[0_0_15px_rgba(255,0,127,0.4)]">2030</span>
           </h1>
-          <div className="flex flex-col md:flex-row md:items-center gap-4 text-slate-400 text-xs font-medium">
-            <div className="flex items-center gap-2 px-3 py-1 bg-slate-900 border border-slate-800 rounded-full">
-              <span className="text-amber-500 font-bold">CURRENT PRICE</span>
-              <span className="text-white mono">${CUR_PRICE.toFixed(2)}</span>
+          
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center gap-3 px-5 py-2 bg-[#0d1630] border border-slate-800 rounded-lg shadow-inner">
+              <span className="text-amber-500 font-black text-[10px] uppercase tracking-widest">Entry</span>
+              <span className="text-white mono text-lg font-bold">${CUR_PRICE.toFixed(2)}</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1 bg-slate-900 border border-slate-800 rounded-full">
-              <span className="text-amber-500 font-bold">RATING</span>
-              <span className="text-white">CONTRARIAN BUY</span>
+            <div className="flex items-center gap-3 px-5 py-2 bg-[#0d1630] border border-slate-800 rounded-lg shadow-inner">
+              <span className="text-[#ff007f] font-black text-[10px] uppercase tracking-widest">Rating</span>
+              <span className="text-white text-lg font-bold">STRONG BUY</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1 bg-slate-900 border border-slate-800 rounded-full">
-              <span className="text-amber-500 font-bold">POST-SPLIT</span>
-              <span className="text-white">10:1 ADJUSTED</span>
+            <div className="flex items-center gap-3 px-5 py-2 bg-[#0d1630] border border-slate-800 rounded-lg shadow-inner">
+              <span className="text-slate-500 font-black text-[10px] uppercase tracking-widest">Horizon</span>
+              <span className="text-white text-lg font-bold">5 YEARS</span>
             </div>
           </div>
         </header>
 
         {/* Narrative Box */}
-        <div className={`mb-8 p-6 rounded-xl border-l-4 transition-all duration-500 bg-opacity-10 ${currentProjection.config.bg} border-l-[${currentProjection.config.color}]`} style={{ borderLeftColor: currentProjection.config.color }}>
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded" style={{ backgroundColor: currentProjection.config.color, color: '#fff' }}>
-                Strategy Narrative
-              </span>
-              <h2 className="text-2xl font-bold mt-2 text-white">{currentProjection.config.label}</h2>
+        <div className={`mb-10 p-8 rounded-2xl border-l-[6px] transition-all duration-700 bg-[#0d1630]/80 backdrop-blur-md border-[#ff007f] shadow-[0_0_40px_rgba(0,0,0,0.3)] relative group`}>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#ff007f05] to-transparent pointer-events-none rounded-2xl"></div>
+          <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-[#ff007f] text-white shadow-[0_0_15px_rgba(255,0,127,0.5)]">
+                  Intelligence Core
+                </span>
+                <span className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">PROBABILITY WEIGHTED: 50%</span>
+              </div>
+              <h2 className="text-3xl font-black text-white tracking-tight">{currentProjection.config.label}</h2>
             </div>
             <div className="text-right">
-              <div className="text-xs text-slate-500 uppercase mb-1">2030E Target</div>
-              <div className="text-4xl font-black" style={{ color: currentProjection.config.color }}>
+              <div className="text-[10px] text-amber-500 font-black uppercase tracking-widest mb-1">Target Price High</div>
+              <div className="text-5xl lg:text-6xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                 ${currentProjection.priceEnhanced[4].toFixed(0)}
               </div>
             </div>
           </div>
-          <p className="text-slate-400 text-sm leading-relaxed max-w-4xl italic">
-            "{currentProjection.config.desc}"
+          <p className="text-slate-300 text-lg leading-relaxed max-w-5xl font-medium border-t border-slate-800/50 pt-6">
+            <span className="text-[#ff007f] font-black text-3xl leading-none mr-2">"</span>
+            {currentProjection.config.desc}
+            <span className="text-[#ff007f] font-black text-3xl leading-none ml-2">"</span>
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
-          <div className="lg:col-span-3">
-            <ScenarioSelector active={scenario} onChange={setScenario} />
-            <ProjectionChart currentScenario={scenario} allProjections={allProjections} />
-            <FinancialTable data={currentProjection} />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 mb-12">
+          <div className="lg:col-span-3 space-y-10">
+            <div className="bg-[#0d1630]/60 p-2 rounded-xl inline-block border border-slate-800">
+              <ScenarioSelector active={scenario} onChange={setScenario} />
+            </div>
+            
+            <div className="rounded-2xl border border-slate-800 bg-[#0d1630]/40 overflow-hidden backdrop-blur-sm">
+              <ProjectionChart currentScenario={scenario} allProjections={allProjections} />
+            </div>
+
+            <div className="rounded-2xl border border-slate-800 bg-[#0d1630]/40 overflow-hidden backdrop-blur-sm">
+              <FinancialTable data={currentProjection} />
+            </div>
           </div>
 
-          <div className="space-y-6">
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-6 shadow-xl sticky top-8">
-              <h3 className="text-[10px] font-black uppercase tracking-widest text-amber-500 mb-6 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                Scenario Summary
+          <div className="space-y-8">
+            <div className="bg-[#0d1630] border border-slate-800 rounded-2xl p-8 shadow-2xl sticky top-8">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 mb-8 flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(251,191,36,0.5)]"></span>
+                Key Projections
               </h3>
-              <div className="space-y-5">
-                <div className="flex justify-between items-end border-b border-slate-800 pb-3">
-                  <span className="text-xs text-slate-500">5Y Total Return</span>
-                  <span className="text-xl font-black text-white">+{currentProjection.cumReturns[4].toFixed(0)}%</span>
-                </div>
-                <div className="flex justify-between items-end border-b border-slate-800 pb-3">
-                  <span className="text-xs text-slate-500">Implied CAGR</span>
-                  <span className="text-xl font-black text-white">{currentProjection.cagrs[4].toFixed(1)}%</span>
-                </div>
-                <div className="flex justify-between items-end border-b border-slate-800 pb-3">
-                  <span className="text-xs text-slate-500">Exit Multiple</span>
-                  <span className="text-xl font-black text-white">{currentProjection.config.peMultiple[4]}x</span>
-                </div>
-                <div className="flex justify-between items-end border-b border-slate-800 pb-3">
-                  <span className="text-xs text-slate-500">2030E EPS</span>
-                  <span className="text-xl font-black text-white">${currentProjection.eps[4].toFixed(2)}</span>
-                </div>
+              <div className="space-y-6">
+                {[
+                  { label: '5Y Total Return', value: `+${currentProjection.cumReturns[4].toFixed(0)}%`, color: 'text-white' },
+                  { label: 'Implied CAGR', value: `${currentProjection.cagrs[4].toFixed(1)}%`, color: 'text-[#ff007f]' },
+                  { label: '2030E Multiple', value: `${currentProjection.config.peMultiple[4]}x`, color: 'text-white' },
+                  { label: '2030E EPS', value: `$${currentProjection.eps[4].toFixed(2)}`, color: 'text-amber-500' },
+                ].map((item, idx) => (
+                  <div key={idx} className="flex flex-col gap-1 border-b border-slate-800 pb-4 last:border-0 last:pb-0">
+                    <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">{item.label}</span>
+                    <span className={`text-3xl font-black ${item.color} leading-none`}>{item.value}</span>
+                  </div>
+                ))}
               </div>
             </div>
+
+            <AnalystChat scenario={scenario} projection={currentProjection} />
           </div>
         </div>
 
-        <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-6 mb-8 shadow-xl">
-          <h3 className="text-xs font-black text-amber-500 uppercase tracking-widest mb-6">
-            CATALYST TIMELINE & KEY INFLECTION POINTS
+        {/* Catalyst Grid */}
+        <div className="bg-[#0d1630]/40 border border-slate-800 rounded-2xl p-10 mb-12 backdrop-blur-md">
+          <h3 className="text-[10px] font-black text-[#ff007f] uppercase tracking-[0.3em] mb-10 flex items-center gap-4">
+            <span className="w-10 h-[1px] bg-[#ff007f]"></span>
+            EXECUTION TIMELINE
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {CATALYSTS.map((c, i) => (
-              <div key={i} className="bg-slate-800/80 rounded-xl p-4 border border-slate-700/50 h-full flex flex-col">
-                <div className="text-2xl font-black text-white mb-1">{c.yr}</div>
-                <div className={`text-xs font-bold mb-3 ${c.color}`}>Risk: {c.risk}</div>
-                <div className="space-y-2.5 flex-1">
+              <div key={i} className="bg-[#0a1128] rounded-xl p-6 border border-slate-800 transition-all hover:border-[#ff007f]/40 hover:-translate-y-1 group h-full">
+                <div className="text-4xl font-black text-white mb-2 group-hover:text-[#ff007f] transition-colors">{c.yr}</div>
+                <div className={`text-[10px] font-black mb-4 px-2 py-0.5 rounded-full inline-block ${c.risk === 'HIGH' ? 'bg-red-500/20 text-red-500' : c.risk === 'MEDIUM' ? 'bg-amber-500/20 text-amber-500' : 'bg-green-500/20 text-green-500'}`}>
+                   {c.risk} RISK
+                </div>
+                <div className="space-y-3">
                   {c.events.map((e, j) => (
-                    <div key={j} className="text-[11px] text-slate-400 leading-snug flex items-start gap-1.5 border-b border-slate-700/30 pb-1.5 last:border-0">
-                      <span className="text-slate-500">•</span>
-                      <span>{e}</span>
+                    <div key={j} className="text-xs text-slate-400 leading-relaxed font-medium pb-2 border-b border-slate-800/50 last:border-0">
+                      {e}
                     </div>
                   ))}
                 </div>
@@ -255,35 +275,28 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-slate-900/40 border border-slate-800 rounded-xl p-6 mb-8 shadow-xl">
-          <h3 className="text-xs font-black text-amber-500 uppercase tracking-widest mb-6">
-            OUR PROJECTIONS VS. STREET CONSENSUS & TECHNICAL CONTEXT
-          </h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div className="space-y-5 text-slate-400 text-[13px] leading-relaxed">
-              <p><strong className="text-white">Wall Street 12-Mo Consensus:</strong> $116–119 avg target. High: $152.50, Low: $92.00.</p>
-              <p><strong className="text-white">Institutional Analyst Consensus:</strong> Neutral rating, $112 PT. Our model adds $15-25/share from M&A optionality consensus is not pricing in.</p>
+        {/* Conclusion Hero */}
+        <div className="relative group overflow-hidden rounded-2xl p-1 bg-[#0d1630]">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#ff007f] via-amber-500 to-[#ff007f] opacity-20 group-hover:opacity-40 transition-opacity"></div>
+          <div className="relative bg-[#0d1630] rounded-2xl p-10 lg:p-14">
+            <h3 className="text-[10px] font-black text-[#ff007f] uppercase tracking-[0.4em] mb-8">
+              FINAL INVESTMENT VERDICT
+            </h3>
+            <div className="text-2xl lg:text-4xl text-white font-black leading-tight max-w-5xl mb-8">
+              Our probability-weighted target of <span className="text-white underline decoration-[#ff007f] decoration-4 underline-offset-8">${investmentConclusion.pwAvg.toFixed(0)}</span> represents a <span className="text-amber-500">{investmentConclusion.cagr.toFixed(1)}% CAGR</span> over the next 5 years.
             </div>
-            <div className="space-y-5 text-slate-400 text-[13px] leading-relaxed">
-              <p><strong className="text-red-400">IBD Technical Overlay (RS: 11):</strong> Stock is in a confirmed downtrend.</p>
-              <p><strong className="text-green-400">Contrarian Setup:</strong> Maximum pessimism + strong fundamentals = high probability of outsized forward returns.</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-amber-500/5 border-2 border-amber-500/40 rounded-lg p-8 mb-8">
-          <h3 className="text-sm font-black text-amber-500 uppercase tracking-[0.15em] mb-4">
-            INVESTMENT CONCLUSION
-          </h3>
-          <div className="text-[17px] text-slate-200 leading-[1.6] font-medium space-y-4">
-            <p>
-              Our probability-weighted 5-year target is <span className="text-amber-500 font-bold">${investmentConclusion.pwAvg.toFixed(0)}</span> (CAGR: <span className="text-amber-500 font-bold">{investmentConclusion.cagr.toFixed(1)}%</span>), turning $10,000 into <span className="text-amber-500 font-bold">${investmentConclusion.tenKResult.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>.
+            <p className="text-slate-400 text-lg max-w-4xl font-medium">
+              At an entry price of ${CUR_PRICE.toFixed(2)}, Netflix provides a rare combination of platform optionality, margin expansion, and shareholder yield that current market sentiment is significantly discounting. 
             </p>
           </div>
         </div>
 
-        <footer className="mt-16 pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-600 text-[10px] uppercase tracking-widest font-bold">
-          <div>NFLX Investment Analytics // v4.28 // Feb 16, 2026</div>
+        <footer className="mt-20 pt-10 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-600 text-[10px] uppercase tracking-[0.4em] font-black">
+          <div>QUANT ALPHA CORE // V.2026.02</div>
+          <div className="flex gap-8">
+            <span className="hover:text-white cursor-pointer transition-colors">Proprietary Model</span>
+            <span className="hover:text-white cursor-pointer transition-colors">GS TMT Adjusted</span>
+          </div>
         </footer>
       </div>
     </div>

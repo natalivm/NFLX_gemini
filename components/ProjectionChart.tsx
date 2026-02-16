@@ -32,14 +32,14 @@ const ProjectionChart: React.FC<Props> = ({ currentScenario, allProjections }) =
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-slate-900 border border-slate-700 p-4 rounded shadow-xl">
-          <p className="text-slate-400 text-xs font-bold mb-2 uppercase">{label}</p>
+        <div className="bg-[#0a1128] border border-[#ff007f]/40 p-4 rounded-xl shadow-2xl backdrop-blur-xl">
+          <p className="text-[#ff007f] text-[10px] font-black mb-3 uppercase tracking-widest">{label} TARGETS</p>
           {payload.map((entry: any) => (
-            <div key={entry.name} className="flex justify-between gap-8 mb-1">
-              <span className="text-sm" style={{ color: entry.color }}>
-                {entry.name.charAt(0).toUpperCase() + entry.name.slice(1)} Target:
+            <div key={entry.name} className="flex justify-between gap-10 mb-2 items-center border-b border-slate-800/50 pb-2 last:border-0 last:pb-0">
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-500">
+                {entry.name}
               </span>
-              <span className="text-sm font-bold text-white">${entry.value.toFixed(2)}</span>
+              <span className="text-sm font-black text-white mono">${entry.value.toFixed(2)}</span>
             </div>
           ))}
         </div>
@@ -49,71 +49,86 @@ const ProjectionChart: React.FC<Props> = ({ currentScenario, allProjections }) =
   };
 
   return (
-    <div className="h-[400px] w-full bg-slate-900/40 border border-slate-800 rounded-xl p-6 mb-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-8">
+      <div className="flex justify-between items-center mb-10">
         <div>
-          <h3 className="text-sm font-black text-amber-500 uppercase tracking-widest">Share Price Trajectory</h3>
-          <p className="text-xs text-slate-500">Implied target price through 2030 (all scenarios)</p>
-        </div>
-        <div className="text-right">
-          <span className="text-[10px] text-amber-500/50 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">POST-SPLIT PRICING</span>
+          <h3 className="text-[10px] font-black text-[#ff007f] uppercase tracking-[0.3em] mb-2">Price Velocity Matrix</h3>
+          <p className="text-xs text-slate-500 font-medium italic">Projected valuation paths // Multivariable Outcomes</p>
         </div>
       </div>
-      <ResponsiveContainer width="100%" height="80%">
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-          <XAxis 
-            dataKey="year" 
-            stroke="#475569" 
-            fontSize={12} 
-            tickLine={false} 
-            axisLine={false}
-            padding={{ left: 20, right: 20 }}
-          />
-          <YAxis 
-            stroke="#475569" 
-            fontSize={12} 
-            tickLine={false} 
-            axisLine={false}
-            domain={['auto', 'auto']}
-            tickFormatter={(val) => `$${val}`}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <ReferenceLine 
-            y={CUR_PRICE} 
-            stroke="#d97706" 
-            strokeDasharray="5 5" 
-            label={{ value: 'CURRENT', position: 'right', fill: '#d97706', fontSize: 10 }} 
-          />
-          <Line 
-            type="monotone" 
-            dataKey="bear" 
-            stroke={CONFIGS.bear.color} 
-            strokeWidth={currentScenario === 'bear' ? 4 : 1.5} 
-            dot={{ r: currentScenario === 'bear' ? 6 : 3 }}
-            activeDot={{ r: 8 }}
-            opacity={currentScenario === 'bear' ? 1 : 0.3}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="base" 
-            stroke={CONFIGS.base.color} 
-            strokeWidth={currentScenario === 'base' ? 4 : 1.5} 
-            dot={{ r: currentScenario === 'base' ? 6 : 3 }}
-            activeDot={{ r: 8 }}
-            opacity={currentScenario === 'base' ? 1 : 0.3}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="bull" 
-            stroke={CONFIGS.bull.color} 
-            strokeWidth={currentScenario === 'bull' ? 4 : 1.5} 
-            dot={{ r: currentScenario === 'bull' ? 6 : 3 }}
-            activeDot={{ r: 8 }}
-            opacity={currentScenario === 'bull' ? 1 : 0.3}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      <div className="h-[320px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data}>
+            <defs>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} opacity={0.3} />
+            <XAxis 
+              dataKey="year" 
+              stroke="#475569" 
+              fontSize={10} 
+              tickLine={false} 
+              axisLine={false}
+              padding={{ left: 30, right: 30 }}
+              tick={{ fontWeight: 800 }}
+            />
+            <YAxis 
+              stroke="#475569" 
+              fontSize={10} 
+              tickLine={false} 
+              axisLine={false}
+              domain={['auto', 'auto']}
+              tickFormatter={(val) => `$${val}`}
+              tick={{ fontWeight: 800 }}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <ReferenceLine 
+              y={CUR_PRICE} 
+              stroke="#fbbf24" 
+              strokeDasharray="4 4" 
+              strokeWidth={2}
+              label={{ value: 'SPOT', position: 'right', fill: '#fbbf24', fontSize: 10, fontWeight: 900 }} 
+            />
+            <Line 
+              type="monotone" 
+              dataKey="bear" 
+              name="Conservative"
+              stroke="#ef4444" 
+              strokeWidth={currentScenario === 'bear' ? 4 : 1} 
+              dot={false}
+              activeDot={{ r: 6, fill: '#ef4444' }}
+              opacity={currentScenario === 'bear' ? 1 : 0.2}
+            />
+            <Line 
+              type="monotone" 
+              dataKey="base" 
+              name="Base Case"
+              stroke="#3b82f6" 
+              strokeWidth={currentScenario === 'base' ? 4 : 1} 
+              dot={false}
+              activeDot={{ r: 6, fill: '#3b82f6' }}
+              opacity={currentScenario === 'base' ? 1 : 0.2}
+            />
+            <Line 
+              type="monotone" 
+              dataKey="bull" 
+              name="Aggressive"
+              stroke="#ff007f" 
+              strokeWidth={currentScenario === 'bull' ? 4 : 1.5} 
+              dot={false}
+              activeDot={{ r: 8, fill: '#ff007f' }}
+              opacity={currentScenario === 'bull' ? 1 : 0.2}
+              filter="url(#glow)"
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };

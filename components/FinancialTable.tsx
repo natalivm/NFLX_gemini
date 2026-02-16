@@ -11,20 +11,21 @@ interface Props {
 const FinancialTable: React.FC<Props> = ({ data }) => {
   const { config, years, revs, ebit, netIncome, fcf, shares, eps, price, priceEnhanced, cagrs, cumReturns, fcfYield } = data;
 
-  const Cell = ({ children, header = false, align = 'right', highlight = false, color = '' }: any) => (
+  const Cell = ({ children, header = false, align = 'right', highlight = false, color = '', border = true }: any) => (
     <td className={`
-      px-3 py-2 text-[11px] border border-slate-800 mono
-      ${header ? 'bg-slate-900 font-bold text-slate-400 uppercase tracking-tighter' : 'text-slate-300'}
+      px-4 py-3 text-[11px] font-medium mono whitespace-nowrap
+      ${border ? 'border-b border-slate-800/30' : ''}
+      ${header ? 'bg-[#0d1630] font-black text-slate-500 uppercase tracking-widest text-[9px]' : 'text-slate-300'}
       ${align === 'right' ? 'text-right' : 'text-left'}
-      ${highlight ? 'bg-blue-500/10 font-bold text-blue-400' : ''}
+      ${highlight ? 'bg-[#ff007f]/5 font-black text-[#ff007f]' : ''}
     `} style={color ? { color } : {}}>
       {children}
     </td>
   );
 
-  const SectionHeader = ({ title, color = 'text-slate-500' }: any) => (
+  const SectionHeader = ({ title, color = 'text-[#ff007f]' }: any) => (
     <tr>
-      <td colSpan={8} className={`px-3 py-1 bg-slate-900/80 border border-slate-800 text-[10px] font-black uppercase tracking-widest ${color}`}>
+      <td colSpan={8} className={`px-4 py-2 bg-[#1a233e]/50 text-[10px] font-black uppercase tracking-[0.3em] ${color} border-y border-slate-800/40`}>
         {title}
       </td>
     </tr>
@@ -34,49 +35,45 @@ const FinancialTable: React.FC<Props> = ({ data }) => {
     ((Math.pow(valFinal / valInitial, 1/5) - 1) * 100).toFixed(1) + '%';
 
   return (
-    <div className="bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shadow-2xl">
-      <div className="p-4 bg-slate-900/50 border-b border-slate-800 flex justify-between items-center">
-        <h3 className="text-xs font-black text-amber-500 uppercase tracking-widest">Financial Model Output: {config.label}</h3>
-        <span className="text-[10px] text-slate-500 italic">Values in $USD Billions (except per share)</span>
+    <div className="bg-[#0d1630]/40 backdrop-blur-md">
+      <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-[#0d1630]">
+        <h3 className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em]">
+          DATA MATRIX // {config.label}
+        </h3>
+        <span className="text-[9px] font-black text-slate-600 uppercase tracking-widest">Post-split Adj.</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
             <tr>
-              <Cell header align="left">Metric</Cell>
+              <Cell header align="left">Metric Field</Cell>
               <Cell header>2025A</Cell>
               {years.map(y => <Cell key={y} header>{y}E</Cell>)}
               <Cell header>5Y CAGR</Cell>
             </tr>
           </thead>
           <tbody>
-            <SectionHeader title="Revenue & Subscribers" />
+            <SectionHeader title="Top Line Metrics" />
             <tr>
-              <Cell align="left">Total Revenue</Cell>
+              <Cell align="left">Revenue (USD B)</Cell>
               <Cell>{formatVal(REV_25)}</Cell>
               {revs.map((r, i) => <Cell key={i}>{formatVal(r)}</Cell>)}
               <Cell highlight>{cagr5y(revs[4], REV_25)}</Cell>
             </tr>
             <tr>
-              <Cell align="left">Revenue Growth (YoY)</Cell>
+              <Cell align="left">Growth YoY (%)</Cell>
               <Cell>16.0%</Cell>
               {config.revGrowth.map((g, i) => <Cell key={i}>{(g * 100).toFixed(1)}%</Cell>)}
               <Cell>-</Cell>
             </tr>
             <tr>
-              <Cell align="left">Ads Revenue Layer</Cell>
+              <Cell align="left">Ads Rev Layer</Cell>
               <Cell>$1.5B</Cell>
-              {config.adRev.map((a, i) => <Cell key={i} color="#10b981">${a.toFixed(1)}B</Cell>)}
+              {config.adRev.map((a, i) => <Cell key={i} color="#10b981" highlight>${a.toFixed(1)}B</Cell>)}
               <Cell color="#10b981">{cagr5y(config.adRev[4], 1.5)}</Cell>
             </tr>
-            <tr>
-              <Cell align="left">Paid Members (Millions)</Cell>
-              <Cell>325M</Cell>
-              {config.subs.map((s, i) => <Cell key={i}>{s}M</Cell>)}
-              <Cell>{cagr5y(config.subs[4], 325)}</Cell>
-            </tr>
 
-            <SectionHeader title="Profitability" />
+            <SectionHeader title="Operational Efficiency" />
             <tr>
               <Cell align="left">Operating Margin</Cell>
               <Cell>{(OP_MARGIN_25 * 100).toFixed(1)}%</Cell>
@@ -84,62 +81,34 @@ const FinancialTable: React.FC<Props> = ({ data }) => {
               <Cell color="#3b82f6">+{(config.opMargin[4] - OP_MARGIN_25).toFixed(3)}</Cell>
             </tr>
             <tr>
-              <Cell align="left">Operating Income (EBIT)</Cell>
+              <Cell align="left">EBIT (Billions)</Cell>
               <Cell>{formatVal(REV_25 * OP_MARGIN_25)}</Cell>
               {ebit.map((e, i) => <Cell key={i}>{formatVal(e)}</Cell>)}
               <Cell>{cagr5y(ebit[4], REV_25 * OP_MARGIN_25)}</Cell>
             </tr>
-            <tr>
-              <Cell align="left">Free Cash Flow</Cell>
-              <Cell>{formatVal(FCF_25)}</Cell>
-              {fcf.map((f, i) => <Cell key={i}>{formatVal(f)}</Cell>)}
-              <Cell highlight>{cagr5y(fcf[4], FCF_25)}</Cell>
-            </tr>
 
-            <SectionHeader title="Per Share & Buybacks" />
+            <SectionHeader title="Capital Allocation" />
             <tr>
-              <Cell align="left">Diluted Shares (M)</Cell>
+              <Cell align="left">Shares Out. (M)</Cell>
               <Cell>{SHARES_0}M</Cell>
               {shares.map((s, i) => <Cell key={i}>{s.toFixed(0)}M</Cell>)}
               <Cell color="#ef4444">{((shares[4] - SHARES_0) / SHARES_0 * 100).toFixed(1)}%</Cell>
             </tr>
             <tr>
-              <Cell align="left">Earnings Per Share (EPS)</Cell>
+              <Cell align="left">Earnings Per Share</Cell>
               <Cell>$2.53</Cell>
-              {eps.map((e, i) => <Cell key={i} highlight>${e.toFixed(2)}</Cell>)}
-              <Cell highlight>{cagr5y(eps[4], 2.53)}</Cell>
+              {eps.map((e, i) => <Cell key={i} highlight color="#ff007f">${e.toFixed(2)}</Cell>)}
+              <Cell highlight color="#ff007f">{cagr5y(eps[4], 2.53)}</Cell>
             </tr>
 
-            <SectionHeader title="Valuation & Price Targets" color="text-amber-500" />
-            <tr>
-              <Cell align="left">P/E Multiple</Cell>
-              <Cell>30.4x</Cell>
-              {config.peMultiple.map((p, i) => <Cell key={i}>{p}x</Cell>)}
-              <Cell>-</Cell>
-            </tr>
-            <tr>
-              <Cell align="left">Stand-alone Fair Value</Cell>
-              <Cell>${CUR_PRICE.toFixed(2)}</Cell>
-              {price.map((p, i) => <Cell key={i}>${p.toFixed(2)}</Cell>)}
-              <Cell>-</Cell>
-            </tr>
-            <tr>
-              <Cell align="left">+ WBD/M&A Optionality</Cell>
-              <Cell>-</Cell>
-              {config.wbdImpact.map((w, i) => (
-                <Cell key={i} color={w > 0 ? '#10b981' : w < 0 ? '#ef4444' : ''}>
-                  {w > 0 ? '+' : ''}{w}
-                </Cell>
-              ))}
-              <Cell>-</Cell>
-            </tr>
-            <tr className="bg-slate-900">
-              <Cell align="left" highlight>IMPLIED TARGET PRICE</Cell>
-              <Cell highlight>${CUR_PRICE.toFixed(2)}</Cell>
+            <SectionHeader title="Alpha Valuation" color="text-amber-500" />
+            <tr className="bg-[#ff007f]/5">
+              <Cell align="left" highlight border={false}>Target Price (USD)</Cell>
+              <Cell highlight border={false}>${CUR_PRICE.toFixed(2)}</Cell>
               {priceEnhanced.map((p, i) => (
-                <Cell key={i} highlight color={config.color}>${p.toFixed(2)}</Cell>
+                <Cell key={i} highlight border={false} color="#ff007f" className="text-sm font-black">${p.toFixed(2)}</Cell>
               ))}
-              <Cell highlight color={config.color}>{cagrs[4].toFixed(1)}%</Cell>
+              <Cell highlight border={false} color="#ff007f" className="text-sm font-black">{cagrs[4].toFixed(1)}%</Cell>
             </tr>
           </tbody>
         </table>
