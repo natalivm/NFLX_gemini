@@ -154,10 +154,10 @@ const App: React.FC = () => {
         <div className="mb-8 flex flex-wrap justify-between items-center gap-4">
           <button 
             onClick={() => { setActiveTicker('home'); }}
-            className="flex items-center gap-3 text-[10px] font-black hover:text-white uppercase tracking-[0.2em] transition-all group px-4 py-2 bg-slate-800/50 rounded-full border"
-            style={{ color: accentColor, borderColor: `${accentColor}44` }}
+            className="flex items-center gap-3 text-[10px] font-black hover:text-white uppercase tracking-[0.25em] transition-all duration-300 group px-6 py-3 bg-[#1e293b]/50 hover:bg-[#1e293b] rounded-full border border-slate-700 shadow-xl"
+            style={{ color: accentColor }}
           >
-            <span className="group-hover:-translate-x-1 transition-transform">←</span>
+            <span className="group-hover:-translate-x-1.5 transition-transform duration-300 text-lg leading-none">←</span>
             Return to Universe
           </button>
         </div>
@@ -180,21 +180,9 @@ const App: React.FC = () => {
               <span className="font-black text-[10px] uppercase tracking-widest" style={{ color: accentColor }}>Rating</span>
               <span className="text-white text-lg font-bold">STRONG BUY</span>
             </div>
-            {isSpecial && (
-              <div className="flex items-center gap-3 ml-2">
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{tickerDef.ticker === 'UBER' ? 'Extra DCF' : 'Enhancements'}</span>
-                <button 
-                  onClick={() => setShowEnhancements(!showEnhancements)}
-                  className={`px-6 py-3 rounded-xl text-[10px] font-black transition-all duration-500 border ${showEnhancements ? 'bg-indigo-600 border-indigo-500 text-white scale-110 shadow-[0_0_15px_rgba(79,70,229,0.4)]' : 'bg-slate-800 border-slate-700 text-slate-400 scale-100 opacity-70'}`}
-                >
-                  {showEnhancements ? "★ ACTIVE" : "DISABLED"}
-                </button>
-              </div>
-            )}
           </div>
         </header>
 
-        {/* Focus exclusively on Summary view */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-10">
           <div className="lg:col-span-3 space-y-10">
             {/* Investment Context Section */}
@@ -239,9 +227,29 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-[#0d1630]/60 p-4 rounded-2xl inline-block border border-slate-800 shadow-xl">
+            {/* Scenario & Enhancement Toggle Grouped */}
+            <div className="flex flex-wrap items-center gap-6 bg-[#0d1630]/60 p-4 rounded-2xl border border-slate-800 shadow-xl">
               <ScenarioSelector active={scenario} onChange={setScenario} />
+              
+              <div className="h-12 w-px bg-slate-800 hidden md:block"></div>
+              
+              {isSpecial && (
+                <div className="flex items-center gap-4 py-2">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">
+                      {tickerDef.ticker === 'UBER' ? 'Extra DCF' : 'Enhanced'}
+                    </span>
+                    <button 
+                      onClick={() => setShowEnhancements(!showEnhancements)}
+                      className={`px-8 py-3 rounded-xl text-[10px] font-black transition-all duration-500 border whitespace-nowrap ${showEnhancements ? 'bg-indigo-600 border-indigo-500 text-white scale-110 shadow-[0_0_20px_rgba(79,70,229,0.5)] z-10' : 'bg-slate-800 border-slate-700 text-slate-400 scale-100 opacity-60 z-0'}`}
+                    >
+                      {showEnhancements ? "★ ACTIVE" : "DISABLED"}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
+
             <div className="rounded-2xl border border-slate-800 bg-[#0d1630]/40 overflow-hidden shadow-inner">
               <ProjectionChart currentScenario={scenario} allProjections={allProjections as any} />
             </div>
@@ -307,7 +315,7 @@ const App: React.FC = () => {
             </div>
 
             {/* Scenario Metrics Grid */}
-            {isSpecial && (
+            {isSpecial && tickerDef.ticker !== 'UBER' && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-10">
                 <ScenarioMetricsCard data={allProjections!.bear} currentPrice={tickerDef.currentPrice} />
                 <ScenarioMetricsCard data={allProjections!.base} currentPrice={tickerDef.currentPrice} />

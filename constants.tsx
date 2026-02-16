@@ -24,7 +24,7 @@ export const TICKERS: Record<string, TickerDefinition> = {
     ticker: 'UBER',
     name: 'Uber Technologies',
     sector: 'Mobility & Logistics',
-    themeColor: '#1e293b', // Uber style dark
+    themeColor: '#22c55e', // Changed to green like Duolingo for better visibility
     currentPrice: 69.99,
     shares0: 2100,
     rev25: 43500,
