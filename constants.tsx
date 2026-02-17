@@ -270,6 +270,7 @@ Object.keys(TICKERS).forEach(tickerId => {
   const isEME = tickerId === 'EME';
   const isDASH = tickerId === 'DASH';
   const isSPOT = tickerId === 'SPOT';
+  const isDE = tickerId === 'DE';
   
   CONFIGS[tickerId] = {
     [ScenarioType.BEAR]: {
@@ -311,19 +312,23 @@ Object.keys(TICKERS).forEach(tickerId => {
       label: 'AGGRESSIVE',
       color: '#ff007f',
       bg: 'bg-pink-500/10',
-      revGrowth: isENVA ? [0.20, 0.18, 0.16, 0.14, 0.12] : (isMRVL ? [0.45, 0.28, 0.24, 0.20, 0.18] : (isEME ? [0.18, 0.17, 0.15, 0.13, 0.10] : (isDASH ? [0.264, 0.216, 0.192, 0.168, 0.144] : (isSPOT ? [0.19, 0.18, 0.17, 0.16, 0.15] : [0.18, 0.17, 0.16, 0.15, 0.14])))),
-      fcfMargin: isMRVL ? [0.30, 0.315, 0.33, 0.345, 0.36] : (isEME ? Array(5).fill(0.072) : (isDASH ? [0.10, 0.131, 0.156, 0.175, 0.194] : (isSPOT ? Array(5).fill(t.fcfMargin25 * 1.15) : Array(5).fill(t.fcfMargin25 * 1.3)))),
-      termGrowth: isENVA ? 0.04 : (isMRVL ? 0.045 : (isEME ? 0.035 : (isDASH ? 0.045 : (isSPOT ? 0.03 : 0.035)))),
-      exitMultiple: isENVA ? 14 : (isMRVL ? 35 : (isEME ? 20 : (isDASH ? 32 : (isSPOT ? 19 : 22)))),
+      // Bull growth spreads moderated for ENVA and DE to avoid 2x valuation decoupling.
+      revGrowth: isENVA ? [0.18, 0.16, 0.14, 0.12, 0.10] : (isMRVL ? [0.44, 0.25, 0.22, 0.18, 0.15] : (isEME ? [0.15, 0.14, 0.12, 0.10, 0.08] : (isDASH ? [0.25, 0.20, 0.18, 0.16, 0.14] : (isSPOT ? [0.19, 0.18, 0.17, 0.16, 0.15] : (isDE ? [0.14, 0.13, 0.12, 0.11, 0.10] : [0.16, 0.15, 0.14, 0.13, 0.12]))))),
+      // FCF Margin uplift moderated to 1.08x-1.15x to reflect realistic operating leverage for industrials (DE, EME) and financials (ENVA).
+      fcfMargin: isMRVL ? [0.30, 0.315, 0.33, 0.345, 0.36] : (isEME ? Array(5).fill(0.062) : (isDASH ? [0.09, 0.12, 0.14, 0.15, 0.17] : (isSPOT ? Array(5).fill(t.fcfMargin25 * 1.1) : (isENVA || isDE ? Array(5).fill(t.fcfMargin25 * 1.08) : Array(5).fill(t.fcfMargin25 * 1.15))))),
+      termGrowth: isENVA ? 0.035 : (isMRVL ? 0.04 : (isEME ? 0.035 : (isDASH ? 0.04 : (isSPOT ? 0.03 : 0.03)))),
+      // Exit multiples constrained for industrial/financial profiles (DE, ENVA) to prevent unrealistic path.
+      exitMultiple: isENVA ? 12 : (isMRVL ? 34 : (isEME ? 18 : (isDASH ? 32 : (isSPOT ? 19 : (isDE ? 17.5 : 19))))),
       waccAdj: isDASH ? -0.01 : -0.005,
       desc: isENVA ? 'Explosive growth via bank charter TAM expansion and high-margin BaaS scaling.' : 'Category-defining growth powered by AI tailwinds and operating leverage.',
       thesis: 'Dominant market share capture and best-in-class FCF conversion.',
       drivers: {
-        revPrem: isENVA ? [0.03, 0.04, 0.05, 0.05, 0.05] : (isMRVL ? [0.07, 0.05, 0.04, 0.02, 0.02] : (isEME ? [0.02, 0.02, 0.02, 0.02, 0.02] : (isDASH ? [0.02, 0.02, 0.02, 0.02, 0.02] : [0.03, 0.04, 0.05, 0.05, 0.05]))),
-        fcfUplift: isENVA ? [0.02, 0.02, 0.03, 0.03, 0.04] : (isMRVL ? [0.01, 0.015, 0.02, 0.025, 0.035] : (isEME ? [0.01, 0.01, 0.01, 0.01, 0.01] : (isDASH ? [0.01, 0.015, 0.02, 0.025, 0.03] : [0.02, 0.02, 0.03, 0.03, 0.04]))),
-        bbRate: isMRVL ? 0.025 : (isEME ? 0.02 : (isDASH ? 0.015 : 0.04)),
+        revPrem: isENVA ? [0.01, 0.01, 0.01, 0.01, 0.01] : (isMRVL ? [0.03, 0.02, 0.01, 0.01, 0.01] : (isEME ? [0.01, 0.01, 0.01, 0.01, 0.01] : (isDASH ? [0.01, 0.01, 0.01, 0.01, 0.01] : [0.015, 0.02, 0.02, 0.02, 0.02]))),
+        fcfUplift: isENVA ? [0.005, 0.005, 0.01, 0.01, 0.01] : (isMRVL ? [0.005, 0.01, 0.01, 0.015, 0.02] : (isEME ? [0.005, 0.005, 0.005, 0.005, 0.005] : (isDASH ? [0.005, 0.005, 0.01, 0.01, 0.01] : [0.01, 0.01, 0.01, 0.015, 0.015]))),
+        // Buyback rates moderated for DE and ENVA.
+        bbRate: isMRVL ? 0.02 : (isEME ? 0.01 : (isDASH ? 0.01 : (isDE || isENVA ? 0.02 : 0.03))),
         ebitdaProxy: 0.35,
-        maOptVal: isENVA ? (t.currentPrice * t.shares0 * 0.15) : (isMRVL ? (t.currentPrice * t.shares0 * 0.08) : (isEME ? (t.currentPrice * t.shares0 * 0.12) : (isDASH ? (t.currentPrice * t.shares0 * 0.08) : (t.currentPrice * t.shares0 * 0.1))))
+        maOptVal: isENVA ? (t.currentPrice * t.shares0 * 0.05) : (isMRVL ? (t.currentPrice * t.shares0 * 0.05) : (isEME ? (t.currentPrice * t.shares0 * 0.06) : (isDASH ? (t.currentPrice * t.shares0 * 0.05) : (t.currentPrice * t.shares0 * 0.07))))
       }
     }
   };
