@@ -1,5 +1,4 @@
 
-// Add React import to resolve missing namespace error
 import React from 'react';
 
 export enum ScenarioType {
@@ -8,32 +7,29 @@ export enum ScenarioType {
   BULL = 'bull'
 }
 
+export type ValuationModelType = 'DCF_ADVANCED' | 'PE_MULTIPLE' | 'HARDCODED_PATH';
+
 export interface ScenarioConfig {
   label: string;
   color: string;
   bg: string;
   revGrowth: number[];
-  fcfGr?: number[]; // FICO specific
-  opMargin?: number[];
   fcfMargin: number[];
-  peMultiple?: number[];
-  exitMultiple?: number;
+  peMultiple?: number[]; // For PE_MULTIPLE model
+  exitMultiple?: number; // For DCF model
   termGrowth?: number;
   waccAdj?: number;
-  bb?: number; // FICO buyback amount
-  adRev?: number[];
-  subs?: number[];
-  users?: number[];
-  bbSpend?: number[];
-  impact?: number[];
   desc: string;
   thesis?: string;
-  // Uber specific model assumptions
-  ebitdaMargin?: string;
+  // Dynamic drivers that vary by stock
+  drivers?: Record<string, number | number[]>;
+  // Legacy fields kept for backward compatibility during transition
+  fcfGr?: number[];
+  bb?: number;
+  adRev?: number[];
+  impact?: number[];
   waccRange?: string;
-  buybackAssumption?: string;
-  tamExpansionAssumption?: string;
-  hardcodedTrajectory?: number[]; // To match the provided Uber model exactly
+  hardcodedTrajectory?: number[];
   hardcodedConservative?: number[];
 }
 
@@ -51,13 +47,16 @@ export interface TickerDefinition {
   themeColor: string;
   currentPrice: number;
   shares0: number;
-  dilutedShares?: number;
   rev25: number;
-  opMargin25?: number;
   fcfMargin25: number;
   taxRate: number;
   unitLabel: string;
   unit25: number;
+  modelType: ValuationModelType;
+  enhancementLabel?: string;
+  // Financial specifics
+  dilutedShares?: number;
+  opMargin25?: number;
   cash?: number;
   debt?: number;
   beta?: number;
@@ -66,12 +65,12 @@ export interface TickerDefinition {
 }
 
 export interface ProjectionData {
+  ticker: string;
   years: string[];
   revs: number[];
   ebit: number[];
   netIncome: number[];
   fcf: number[];
-  pvFCFs?: number[];
   shares: number[];
   eps: number[];
   price: number[];
@@ -80,13 +79,9 @@ export interface ProjectionData {
   cumReturns: number[];
   fcfYield: number[];
   config: ScenarioConfig;
-  ticker: string;
-  // Specialized DCF outputs
   w?: number;
-  equityVal?: number;
   pricePerShare?: number;
   mosPrice?: number;
-  upside?: number;
   mosUpside?: number;
 }
 

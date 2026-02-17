@@ -78,10 +78,11 @@ const FinancialTable: React.FC<Props> = ({ data }) => {
 
             <SectionHeader title="Operational Efficiency" />
             <tr>
-              <Cell align="left">Operating Margin</Cell>
-              <Cell>{(tDef.opMargin25 * 100).toFixed(1)}%</Cell>
-              {config.opMargin.map((m, i) => <Cell key={i}>{(m * 100).toFixed(1)}%</Cell>)}
-              <Cell color="#3b82f6">+{(config.opMargin[4] - tDef.opMargin25).toFixed(3)}</Cell>
+              {/* Fix: Replaced 'opMargin' with 'fcfMargin' as it is the property available on ScenarioConfig and TickerDefinition types */}
+              <Cell align="left">FCF Margin</Cell>
+              <Cell>{(tDef.fcfMargin25 * 100).toFixed(1)}%</Cell>
+              {config.fcfMargin.map((m, i) => <Cell key={i}>{(m * 100).toFixed(1)}%</Cell>)}
+              <Cell color="#3b82f6">+{(config.fcfMargin[4] - tDef.fcfMargin25).toFixed(3)}</Cell>
             </tr>
             <tr>
               <Cell align="left">Free Cash Flow</Cell>

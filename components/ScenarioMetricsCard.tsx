@@ -5,11 +5,22 @@ import { ProjectionData } from '../types';
 interface Props {
   data: ProjectionData;
   currentPrice: number;
+  overallRating: string;
 }
 
-const ScenarioMetricsCard: React.FC<Props> = ({ data, currentPrice }) => {
+const ScenarioMetricsCard: React.FC<Props> = ({ data, currentPrice, overallRating }) => {
   const { config, pricePerShare, mosPrice, w, mosUpside } = data;
   const isPositive = (mosUpside || 0) >= 0;
+  
+  // Refine the verdict label based on the overall consensus rating
+  const getVerdictText = () => {
+    if (!isPositive) return 'AVOID';
+    if (overallRating === 'HOLD') return 'HOLD / ACCUM.';
+    if (overallRating === 'AVOID') return 'SPEC. WATCH';
+    return 'BUY';
+  };
+
+  const verdictText = getVerdictText();
   const verdictColor = isPositive ? 'text-green-500' : 'text-red-500';
 
   return (
@@ -41,7 +52,7 @@ const ScenarioMetricsCard: React.FC<Props> = ({ data, currentPrice }) => {
       </div>
 
       <div className={`pt-4 border-t border-slate-800/50 text-base font-black uppercase tracking-wider ${verdictColor}`}>
-        {isPositive ? 'BUY' : 'AVOID'} — MoS {isPositive ? '+' : ''}{(mosUpside! * 100).toFixed(0)}% vs current
+        {verdictText} — MoS {isPositive ? '+' : ''}{(mosUpside! * 100).toFixed(0)}% vs current
       </div>
     </div>
   );

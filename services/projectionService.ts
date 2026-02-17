@@ -2,185 +2,161 @@
 import { 
   ScenarioType, 
   ProjectionData, 
-  ScenarioConfig 
+  ScenarioConfig,
+  TickerDefinition
 } from '../types';
-import { 
-  TICKERS,
-  CONFIGS 
-} from '../constants';
+import { TICKERS, CONFIGS } from '../constants';
 
-export const calculateProjection = (ticker: string, type: ScenarioType, showEnhancements = true): ProjectionData => {
-  const t = TICKERS[ticker];
-  const sc = CONFIGS[ticker][type];
-  const years = ["2025E", "2026E", "2027E", "2028E", "2029E"];
+/**
+ * Shared logic for WACC calculation
+ */
+const calculateWacc = (t: TickerDefinition, sc: ScenarioConfig) => {
+  const rfRate = 0.0404;
+  const erp = 0.055;
+  const beta = t.beta || 1.0;
+  const ke = rfRate + beta * erp;
+  
+  const mktCap = t.currentPrice * t.shares0;
+  const totalDebt = t.debt || 0;
+  const eqW = mktCap / (mktCap + totalDebt);
+  const debtW = 1 - eqW;
+  
+  return (eqW * ke) + (debtW * (t.costDebt || 0.05) * (1 - t.taxRate)) + (sc.waccAdj || 0);
+};
 
-  // Specialized Logic for UBER (Hardcoded Trajectory Model)
-  if (ticker === 'UBER') {
-    const trajectory = showEnhancements ? sc.hardcodedTrajectory! : sc.hardcodedConservative!;
-    const fcf = years.map((_, i) => t.rev25 * Math.pow(1.15, i) * (sc.fcfMargin[i] || 0.15));
-    const shares = years.map(() => t.shares0);
-    const finalPrice = trajectory[4];
+/**
+ * Model Processors
+ */
+const Processors = {
+  // Advanced DCF (Used by FICO, DUOL, TLN, AGCO, DE)
+  DCF_ADVANCED: (t: TickerDefinition, sc: ScenarioConfig, showEnhancements: boolean): ProjectionData => {
+    const w = calculateWacc(t, sc);
+    const years = ["2026E", "2027E", "2028E", "2029E", "2030E"];
     
-    return {
-      ticker,
-      years,
-      revs: years.map((_, i) => t.rev25 * Math.pow(1.15, i)),
-      ebit: years.map((_, i) => t.rev25 * Math.pow(1.15, i) * 0.18),
-      netIncome: years.map((_, i) => t.rev25 * Math.pow(1.15, i) * 0.12),
-      fcf,
-      shares,
-      eps: fcf.map((f, i) => f / shares[i]),
-      price: trajectory, // Base path
-      priceEnhanced: trajectory, // Converged path
-      cagrs: trajectory.map((p, i) => (Math.pow(p / t.currentPrice, 1 / (i + 1)) - 1) * 100),
-      cumReturns: trajectory.map(p => ((p / t.currentPrice) - 1) * 100),
-      fcfYield: fcf.map((f, i) => (f / shares[i]) / trajectory[i] * 100),
-      config: sc,
-      pricePerShare: finalPrice,
-      w: parseFloat(sc.waccRange || '7.5') / 100,
-      upside: (finalPrice / t.currentPrice - 1)
-    };
-  }
-
-  // Specialized Logic for DUOL and FICO
-  if (ticker === 'DUOL' || ticker === 'FICO') {
-    const isFico = ticker === 'FICO';
+    // Resolve dynamic drivers from config
+    const tamAdder = (showEnhancements && sc.drivers?.tamB as number[]) || [0,0,0,0,0];
+    const maAdder = (showEnhancements && sc.drivers?.maB as number[]) || [0,0,0,0,0];
+    const platAdder = (showEnhancements && sc.drivers?.plB as number[]) || [0,0,0,0,0];
+    const revPremium = (showEnhancements && sc.drivers?.revPrem as number[]) || [0,0,0,0,0];
+    const buybackRate = (showEnhancements && (sc.drivers?.bbRate as number)) || 0;
     
-    // WACC Build-up
-    const rfRate = 0.0404; // Updated for FICO model Feb 13
-    const erp = 0.055;
-    const beta = t.beta || 1.0;
-    const ke = rfRate + beta * erp;
-    
-    let w: number;
-    if (isFico) {
-      const mktCap = t.currentPrice * t.shares0;
-      const ev = mktCap + (t.debt || 0) - (t.cash || 0);
-      const debtW = (t.debt || 0) / (mktCap + (t.debt || 0));
-      const eqW = mktCap / (mktCap + (t.debt || 0));
-      w = eqW * ke + debtW * (t.costDebt || 0.05) * (1 - t.taxRate);
-    } else {
-      w = rfRate + 0.85 * erp + 0.015 + 0.02; // DUOL legacy
-    }
-    w += (sc.waccAdj || 0);
-
-    // Enhancement Premiums
-    const tamPrem = isFico ? 0.10 : 0.05;
-    const platPrem = isFico ? 0.08 : 0.05;
-    const maPrem = isFico ? 0.03 : 0.05;
-    const totPrem = showEnhancements ? (tamPrem + platPrem + maPrem) : 0;
-
-    const buybackReduction = showEnhancements ? (isFico ? 0.03 : 0.01) : 0;
-    const avgBuybackPrice = [t.currentPrice * 1.1, t.currentPrice * 1.25, t.currentPrice * 1.4, t.currentPrice * 1.6, t.currentPrice * 1.8];
+    const fcfBase = sc.drivers?.fcfBase as number;
+    const fcfGrowth = sc.drivers?.fcfGrowth as number[];
 
     let currentRev = t.rev25;
-    let currentFcf = t.fcfMargin25 * t.rev25;
+    let currentShares = t.dilutedShares || t.shares0;
+    
     const revs: number[] = [];
     const fcfs: number[] = [];
     const pvFCFs: number[] = [];
-    let currentShares = t.dilutedShares || t.shares0;
     const shareHistory: number[] = [];
 
+    let pFcf = fcfBase || 0;
+
     for (let i = 0; i < 5; i++) {
-      currentRev *= (1 + sc.revGrowth[i]);
-      if (sc.fcfGr) {
-        currentFcf *= (1 + sc.fcfGr[i]);
+      currentRev *= (1 + sc.revGrowth[i] + revPremium[i]);
+      
+      let baseFcf = 0;
+      if (fcfBase && fcfGrowth) {
+        baseFcf = i === 0 ? fcfBase : pFcf * (1 + fcfGrowth[i]);
+        pFcf = baseFcf;
       } else {
-        currentFcf = currentRev * sc.fcfMargin[i];
+        baseFcf = currentRev * sc.fcfMargin[i];
       }
       
-      const pv = currentFcf / Math.pow(1 + w, i + 1);
+      const totalFcf = baseFcf + tamAdder[i] + maAdder[i] + platAdder[i];
       
       revs.push(currentRev);
-      fcfs.push(currentFcf);
-      pvFCFs.push(pv);
+      fcfs.push(totalFcf);
+      pvFCFs.push(totalFcf / Math.pow(1 + w, i + 1));
       
-      // Buyback math: shares reduced by (Dollar Spend / Price)
-      if (isFico && showEnhancements && sc.bb) {
-         currentShares -= (sc.bb / avgBuybackPrice[i]);
-      } else {
-         currentShares *= (1 - buybackReduction);
-      }
+      if (buybackRate > 0) currentShares *= (1 - buybackRate);
       shareHistory.push(currentShares);
     }
 
     const sumPVFCF = pvFCFs.reduce((a, b) => a + b, 0);
-    const tg = sc.termGrowth || (isFico ? 0.035 : 0.03);
-    const termFCF = fcfs[4] * (1 + tg);
-    const tvPerp = termFCF / (w - tg);
-    const pvTVPerp = tvPerp / Math.pow(1 + w, 5);
+    const tg = sc.termGrowth || 0.025;
     
-    const exitM = sc.exitMultiple || (isFico ? 30 : 20);
-    const tvExit = fcfs[4] * exitM;
-    const pvTVExit = tvExit / Math.pow(1 + w, 5);
-    
-    // Blended TV (50/50 for institutional precision)
-    const pvTVBlend = pvTVPerp * 0.5 + pvTVExit * 0.5;
-    let ev = sumPVFCF + pvTVBlend;
-    if (showEnhancements) ev *= (1 + totPrem);
-    
-    const equityVal = ev + (t.cash || 0) - (t.debt || 0);
-    const pricePerShare = equityVal / currentShares;
+    // Terminal Value: Blend of Gordon Growth and Exit Multiple
+    const tvPerp = (fcfs[4] * (1 + tg)) / (w - tg);
+    const tvExit = (revs[4] * (sc.drivers?.ebitdaProxy as number || 0.15)) * (sc.exitMultiple || 15);
+    const pvTV = ((tvPerp + tvExit) / 2) / Math.pow(1 + w, 5);
+
+    const netDebt = (t.debt || 0) - (t.cash || 0);
+    const equityVal = sumPVFCF + pvTV - netDebt + (showEnhancements ? (sc.drivers?.maOptVal as number || 0) : 0);
+    const pricePerShare = equityVal / shareHistory[4];
 
     return {
-      ticker,
-      years,
-      revs,
-      ebit: revs.map(r => r * (isFico ? 0.54 : 0.2)), 
-      netIncome: revs.map(r => r * (isFico ? 0.40 : 0.15)),
+      ticker: t.ticker,
+      years, revs, shares: shareHistory, w, pricePerShare,
+      ebit: revs.map(r => r * 0.2), 
+      netIncome: revs.map(r => r * 0.15),
       fcf: fcfs,
-      pvFCFs,
-      shares: shareHistory,
-      eps: fcfs.map((f, i) => f / shareHistory[i]), // Proxy FCFPS
+      eps: fcfs.map((f, i) => f / shareHistory[i]),
       price: shareHistory.map(() => pricePerShare),
-      priceEnhanced: shareHistory.map((_, i) => pricePerShare * (0.85 + 0.03 * i)), // Convergence path
+      priceEnhanced: shareHistory.map((_, i) => pricePerShare * (0.85 + 0.03 * i)),
       cagrs: shareHistory.map(() => (Math.pow(pricePerShare / t.currentPrice, 1/5) - 1) * 100),
       cumReturns: shareHistory.map(() => (pricePerShare / t.currentPrice - 1) * 100),
       fcfYield: fcfs.map((f, i) => (f / shareHistory[i]) / pricePerShare * 100),
       config: sc,
-      w,
-      equityVal,
-      pricePerShare,
       mosPrice: pricePerShare * 0.75,
-      upside: (pricePerShare / t.currentPrice - 1),
+      mosUpside: (pricePerShare * 0.75 / t.currentPrice - 1)
+    };
+  },
+
+  // PE Multiple Model (Used by NFLX)
+  PE_MULTIPLE: (t: TickerDefinition, sc: ScenarioConfig, showEnhancements: boolean): ProjectionData => {
+    const years = ["2026E", "2027E", "2028E", "2029E", "2030E"];
+    let currentRev = t.rev25;
+    const revs = years.map((_, i) => currentRev *= (1 + sc.revGrowth[i]));
+    const netIncome = revs.map((r, i) => r * (sc.drivers?.niMargin as number || 0.25));
+    const shares = years.map(() => t.shares0);
+    const eps = netIncome.map((ni, i) => ni / shares[i]);
+    const basePrice = eps.map((e, i) => e * (sc.peMultiple?.[i] || 25));
+    
+    const priceEnhanced = basePrice.map((p, i) => p + (showEnhancements && sc.impact ? sc.impact[i] : 0));
+    const pricePerShare = priceEnhanced[4];
+
+    return {
+      ticker: t.ticker,
+      years, revs, ebit: revs.map(r => r * 0.3), netIncome, fcf: revs.map(r => r * 0.2),
+      shares, eps, price: basePrice, priceEnhanced, pricePerShare,
+      cagrs: priceEnhanced.map((p, i) => (Math.pow(p / t.currentPrice, 1 / (i + 1)) - 1) * 100),
+      cumReturns: priceEnhanced.map(p => ((p / t.currentPrice) - 1) * 100),
+      fcfYield: eps.map((e, i) => (e * 0.8) / priceEnhanced[i] * 100),
+      config: sc,
+      mosPrice: pricePerShare * 0.75,
+      mosUpside: (pricePerShare * 0.75 / t.currentPrice - 1)
+    };
+  },
+
+  // Hardcoded Path (Used by UBER)
+  HARDCODED_PATH: (t: TickerDefinition, sc: ScenarioConfig, showEnhancements: boolean): ProjectionData => {
+    const trajectory = showEnhancements ? sc.hardcodedTrajectory! : sc.hardcodedConservative!;
+    const years = ["2026E", "2027E", "2028E", "2029E", "2030E"];
+    const pricePerShare = trajectory[4];
+
+    return {
+      ticker: t.ticker,
+      years, revs: years.map(() => t.rev25), ebit: years.map(() => 0), netIncome: years.map(() => 0),
+      fcf: years.map(() => 0), shares: years.map(() => t.shares0), eps: years.map(() => 0),
+      price: trajectory, priceEnhanced: trajectory, pricePerShare,
+      cagrs: trajectory.map((p, i) => (Math.pow(p / t.currentPrice, 1 / (i + 1)) - 1) * 100),
+      cumReturns: trajectory.map(p => ((p / t.currentPrice) - 1) * 100),
+      fcfYield: trajectory.map(() => 0),
+      config: sc,
+      mosPrice: pricePerShare * 0.75,
       mosUpside: (pricePerShare * 0.75 / t.currentPrice - 1)
     };
   }
+};
 
-  // Standard Projection Logic for other tickers
-  let currentRev = t.rev25;
-  const revs: number[] = [];
-  for (let i = 0; i < 5; i++) {
-    currentRev *= (1 + sc.revGrowth[i]);
-    revs.push(currentRev);
-  }
-  const ebit = revs.map((r, i) => r * (sc.opMargin ? sc.opMargin[i] : 0.2));
-  const netIncome = ebit.map(e => e * (1 - t.taxRate));
-  const fcf = revs.map((r, i) => r * sc.fcfMargin[i]);
-  const shares = revs.map(() => t.shares0);
-  const eps = netIncome.map((ni, i) => ni / shares[i]);
-  const price = eps.map((e, i) => e * (sc.peMultiple ? sc.peMultiple[i] : 25));
-  const priceEnhanced = price.map((p, i) => p + (sc.impact ? sc.impact[i] : 0));
-  const cagrs = priceEnhanced.map((p, i) => (Math.pow(p / t.currentPrice, 1 / (i + 1)) - 1) * 100);
-  const cumReturns = priceEnhanced.map(p => ((p / t.currentPrice) - 1) * 100);
-  const fcfYield = fcf.map((f, i) => (f / shares[i]) / priceEnhanced[i] * 100);
-
-  return {
-    ticker,
-    years: years,
-    revs,
-    ebit,
-    netIncome,
-    fcf,
-    shares,
-    eps,
-    price,
-    priceEnhanced,
-    cagrs,
-    cumReturns,
-    fcfYield,
-    config: sc
-  };
+export const calculateProjection = (tickerId: string, type: ScenarioType, showEnhancements = true): ProjectionData => {
+  const t = TICKERS[tickerId];
+  const sc = CONFIGS[tickerId][type];
+  
+  const processor = Processors[t.modelType] || Processors.PE_MULTIPLE;
+  return processor(t, sc, showEnhancements);
 };
 
 export const formatVal = (n: number, decimals = 1, currency = true): string => {
