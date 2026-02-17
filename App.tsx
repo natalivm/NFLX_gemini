@@ -18,6 +18,9 @@ interface StockRow {
 }
 
 const STOCKS: StockRow[] = [
+  { ticker: 'SOFI', fairPriceRange: '$18 - $42', active: true },
+  { ticker: 'ENVA', fairPriceRange: '$120 - $210', active: true },
+  { ticker: 'WWD', fairPriceRange: '$350 - $490', active: true },
   { ticker: 'ITT', fairPriceRange: '$180 - $265', active: true },
   { ticker: 'ANET', fairPriceRange: '$150 - $290', active: true },
   { ticker: 'CRDO', fairPriceRange: '$100 - $280', active: true },

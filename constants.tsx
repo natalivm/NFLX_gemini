@@ -2,8 +2,35 @@
 import { ScenarioType, ScenarioConfig, Catalyst, TickerDefinition } from './types';
 
 export const TICKERS: Record<string, TickerDefinition> = {
+  SOFI: {
+    ticker: 'SOFI', name: 'SoFi Technologies', sector: 'FinTech / Digital Banking', themeColor: '#3b82f6',
+    currentPrice: 19.43, shares0: 1321, rev25: 3580, fcfMargin25: 0.165, taxRate: 0.15,
+    cash: 3270, debt: 3294, beta: 1.80, costDebt: 0.055, unitLabel: 'Members (M)', unit25: 13.7,
+    modelType: 'DCF_ADVANCED', enhancementLabel: 'Cross-Sell & Crypto TAM',
+    rsRating: 29, aiImpact: 'TAILWIND',
+    strategicNarrative: "A leading fintech pivoting to a digital banking powerhouse. Despite recent dilution and weak relative strength (RS 29), its 30% revenue growth and improving capital-light mix (44% fee-based) present an asymmetric entry point. Bank charter and deposit growth ($37.5B) provide structural funding advantages over neobank peers.",
+    deepDive: []
+  },
+  ENVA: {
+    ticker: 'ENVA', name: 'Enova International', sector: 'FinTech / Lending', themeColor: '#3b82f6',
+    currentPrice: 149.28, shares0: 24.8, rev25: 1830, fcfMargin25: 0.098, taxRate: 0.22,
+    cash: 200, debt: 3950, beta: 1.49, costDebt: 0.072, unitLabel: 'Loan Portfolio', unit25: 3.5,
+    modelType: 'DCF_ADVANCED', enhancementLabel: 'Grasshopper Bank & Buybacks',
+    rsRating: 88, aiImpact: 'TAILWIND',
+    strategicNarrative: "Enova is an AI-native lending leader pivoting to a bank holding company model via Grasshopper Bank. This transition secures a lower cost of funds and a regulatory moat. Combined with a massive share buyback program (10%+ of float retired) and superior ROE, the stock represents a significant valuation disconnect from bank-chartered peers.",
+    deepDive: []
+  },
+  WWD: {
+    ticker: 'WWD', name: 'Woodward, Inc.', sector: 'Aerospace & Defense', themeColor: '#3b82f6',
+    currentPrice: 383.64, shares0: 59.9, rev25: 3600, fcfMargin25: 0.09, taxRate: 0.22,
+    cash: 327, debt: 550, beta: 1.18, costDebt: 0.052, unitLabel: 'Actuation Systems', unit25: 1.0,
+    modelType: 'DCF_ADVANCED', enhancementLabel: 'Safran Integration & Aftermarket',
+    rsRating: 95, aiImpact: 'TAILWIND',
+    strategicNarrative: "Best-in-class compounder with dominant positions in aerospace actuation and industrial power controls. RS 95 confirms elite relative strength. The Safran acquisition provides significant cross-sell synergies, while AI data center infrastructure buildout creates a massive tailwind for gas turbine backup power controls.",
+    deepDive: []
+  },
   ITT: {
-    ticker: 'ITT', name: 'ITT Inc.', sector: 'Diversified Industrials', themeColor: '#0d2137',
+    ticker: 'ITT', name: 'ITT Inc.', sector: 'Diversified Industrials', themeColor: '#3b82f6',
     currentPrice: 202.09, shares0: 97.9, rev25: 3900, fcfMargin25: 0.142, taxRate: 0.21,
     cash: 600, debt: 4800, beta: 1.20, costDebt: 0.045, unitLabel: 'Flow Solutions', unit25: 1.3,
     modelType: 'DCF_ADVANCED', enhancementLabel: 'SPX Integration & TAM',
@@ -194,6 +221,21 @@ export const TICKERS: Record<string, TickerDefinition> = {
 };
 
 export const CONFIGS: Record<string, Record<ScenarioType, ScenarioConfig>> = {
+  SOFI: {
+    [ScenarioType.BEAR]: { label: "Bear", color: "#ef4444", bg: "bg-red-900", revGrowth: [0.25, 0.20, 0.15, 0.10, 0.08], fcfMargin: [0.12, 0.13, 0.14, 0.14, 0.15], exitMultiple: 10, termGrowth: 0.025, desc: "Credit cycle hit and NIM compression.", drivers: { ebitdaProxy: 0.32 } },
+    [ScenarioType.BASE]: { label: "Base", color: "#3b82f6", bg: "bg-blue-900", revGrowth: [0.30, 0.28, 0.23, 0.18, 0.14], fcfMargin: [0.16, 0.18, 0.20, 0.22, 0.23], exitMultiple: 14, termGrowth: 0.035, desc: "Steady margin expansion and guidance achievement.", drivers: { bbRate: 0, maOptVal: 250, ebitdaProxy: 0.38, revPrem: [0, 0, 0.015, 0.015, 0.015], fcfUplift: [0, 0.01, 0.01, 0.01, 0.01] } },
+    [ScenarioType.BULL]: { label: "Bull", color: "#10b981", bg: "bg-green-900", revGrowth: [0.33, 0.33, 0.28, 0.23, 0.18], fcfMargin: [0.20, 0.22, 0.24, 0.26, 0.28], exitMultiple: 18, termGrowth: 0.04, desc: "S&P 500 inclusion and platform re-rating.", drivers: { bbRate: 0.01, maOptVal: 500, ebitdaProxy: 0.42, revPrem: [0.01, 0.02, 0.03, 0.03, 0.03], fcfUplift: [0.01, 0.02, 0.025, 0.03, 0.03] } }
+  },
+  ENVA: {
+    [ScenarioType.BEAR]: { label: "Bear", color: "#ef4444", bg: "bg-red-900", revGrowth: [0.10, 0.08, 0.06, 0.04, 0.03], fcfMargin: [0.08, 0.08, 0.082, 0.085, 0.088], exitMultiple: 8, desc: "Credit deterioration and regulatory friction.", drivers: { ebitdaProxy: 0.14 } },
+    [ScenarioType.BASE]: { label: "Base", color: "#3b82f6", bg: "bg-blue-900", revGrowth: [0.16, 0.14, 0.12, 0.10, 0.08], fcfMargin: [0.09, 0.093, 0.096, 0.10, 0.103], exitMultiple: 11, desc: "Successful bank charter transition and organic expansion.", drivers: { bbRate: 0.02, maOptVal: 200, ebitdaProxy: 0.17, revPrem: [0, 0.01, 0.01, 0.01, 0.01] } },
+    [ScenarioType.BULL]: { label: "Bull", color: "#10b981", bg: "bg-green-900", revGrowth: [0.20, 0.18, 0.16, 0.14, 0.12], fcfMargin: [0.10, 0.105, 0.11, 0.115, 0.12], exitMultiple: 14, desc: "Grasshopper Bank super-accretion and 50-state dominance.", drivers: { bbRate: 0.04, maOptVal: 500, ebitdaProxy: 0.20, revPrem: [0.01, 0.02, 0.03, 0.04, 0.04], fcfUplift: [0, 0.015, 0.02, 0.025, 0.025] } }
+  },
+  WWD: {
+    [ScenarioType.BEAR]: { label: "Bear", color: "#ef4444", bg: "bg-red-900", revGrowth: [0.10, 0.07, 0.05, 0.04, 0.03], fcfMargin: [0.08, 0.08, 0.082, 0.085, 0.088], exitMultiple: 14, desc: "Multiple compression and growth deceleration.", drivers: { ebitdaProxy: 0.16 } },
+    [ScenarioType.BASE]: { label: "Base", color: "#3b82f6", bg: "bg-blue-900", revGrowth: [0.14, 0.11, 0.09, 0.08, 0.07], fcfMargin: [0.09, 0.093, 0.096, 0.10, 0.103], exitMultiple: 18, desc: "Steady synergy capture and commercial cycle tailwinds.", drivers: { bbRate: 0.01, maOptVal: 2500, ebitdaProxy: 0.19, revPrem: [0.01, 0.015, 0.015, 0.01, 0.01] } },
+    [ScenarioType.BULL]: { label: "Bull", color: "#10b981", bg: "bg-green-900", revGrowth: [0.17, 0.14, 0.12, 0.11, 0.10], fcfMargin: [0.10, 0.105, 0.11, 0.115, 0.12], exitMultiple: 22, desc: "Aggressive TAM expansion into data centers and eVTOL.", drivers: { bbRate: 0.02, maOptVal: 6000, ebitdaProxy: 0.22, revPrem: [0.02, 0.03, 0.03, 0.02, 0.02], fcfUplift: [0.01, 0.015, 0.02, 0.02, 0.025] } }
+  },
   ITT: {
     [ScenarioType.BEAR]: { label: "Bear", color: "#ef4444", bg: "bg-red-900", revGrowth: [0.04, 0.04, 0.03, 0.03, 0.03], fcfMargin: [0.115, 0.12, 0.12, 0.125, 0.125], exitMultiple: 13, desc: "Integration friction and cyclical automotive headwind.", drivers: { ebitdaProxy: 0.18 } },
     [ScenarioType.BASE]: { label: "Base", color: "#3b82f6", bg: "bg-blue-900", revGrowth: [0.07, 0.06, 0.055, 0.05, 0.045], fcfMargin: [0.115, 0.125, 0.135, 0.14, 0.145], exitMultiple: 15, desc: "Successful SPX FLOW synergy capture.", drivers: { bbRate: 0.005, maOptVal: 1500, ebitdaProxy: 0.20, revPrem: [0, 0.02, 0.02, 0.015, 0.015] } },
@@ -344,6 +386,9 @@ export const CONFIGS: Record<string, Record<ScenarioType, ScenarioConfig>> = {
 };
 
 export const TICKER_CATALYSTS: Record<string, Catalyst[]> = {
+  SOFI: [{ yr: 2026, events: ["S&P 500 inclusion eligibility", "Crypto/Stablecoin revenue materialization"], risk: "MEDIUM", color: "text-blue-400" }],
+  ENVA: [{ yr: 2026, events: ["Grasshopper Bank final regulatory approval", "Integration of deposit-funded models"], risk: "MEDIUM", color: "text-blue-400" }],
+  WWD: [{ yr: 2026, events: ["Safran Electromechanical integration", "Spartanburg facility ramp"], risk: "LOW", color: "text-blue-400" }],
   ITT: [{ yr: 2026, events: ["SPX FLOW synergy realization", "$80M cost savings hurdle"], risk: "MEDIUM", color: "text-blue-400" }],
   ANET: [{ yr: 2026, events: ["800G transition peak"], risk: "LOW", color: "text-indigo-400" }],
   CRDO: [{ yr: 2026, events: ["1.6T DSP full production"], risk: "MEDIUM", color: "text-yellow-400" }],
