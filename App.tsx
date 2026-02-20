@@ -55,12 +55,13 @@ const App: React.FC = () => {
   const [showEnhancements, setShowEnhancements] = useState(true);
   const [liveTickers, setLiveTickers] = useState<Record<string, TickerDefinition>>(TICKERS);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [justUpdated, setJustUpdated] = useState(false);
   const [groundingSources, setGroundingSources] = useState<any[]>([]);
 
   const tickerDef = activeTicker !== 'home' && activeTicker !== 'market-indicators' ? liveTickers[activeTicker] : null;
 
   const handleRefreshPrices = async () => {
-    if (isRefreshing) return;
+    if (isRefreshing || justUpdated) return;
     setIsRefreshing(true);
     setGroundingSources([]);
 
@@ -87,7 +88,6 @@ const App: React.FC = () => {
 
       const updatedPrices = JSON.parse(response.text || '{}');
       
-      // Extract grounding sources as required by rules
       if (response.candidates?.[0]?.groundingMetadata?.groundingChunks) {
         setGroundingSources(response.candidates[0].groundingMetadata.groundingChunks);
       }
@@ -101,6 +101,11 @@ const App: React.FC = () => {
         });
         return next;
       });
+
+      // Show success state and disable for 5 seconds
+      setJustUpdated(true);
+      setTimeout(() => setJustUpdated(false), 5000);
+
     } catch (err) {
       console.error("Price refresh failed:", err);
     } finally {
@@ -171,14 +176,28 @@ const App: React.FC = () => {
 
             <button 
               onClick={handleRefreshPrices}
-              disabled={isRefreshing}
-              className={`group relative px-8 py-4 bg-amber-500/10 border ${isRefreshing ? 'border-amber-500/50 cursor-not-allowed opacity-50' : 'border-amber-500/50 hover:border-amber-400'} rounded-2xl flex items-center gap-4 transition-all hover:scale-105 shadow-2xl`}
+              disabled={isRefreshing || justUpdated}
+              className={`group relative px-8 py-4 border rounded-2xl flex items-center gap-4 transition-all shadow-2xl ${
+                isRefreshing 
+                  ? 'bg-amber-500/10 border-amber-500/50 cursor-not-allowed opacity-50' 
+                  : justUpdated 
+                    ? 'bg-green-500/10 border-green-500/50 cursor-not-allowed' 
+                    : 'bg-amber-500/10 border-amber-500/50 hover:border-amber-400 hover:scale-105'
+              }`}
             >
-              <div className={`w-3 h-3 rounded-full bg-amber-500 shadow-[0_0_15px_#fbbf24] ${isRefreshing ? 'animate-ping' : 'animate-pulse'}`}></div>
+              <div className={`w-3 h-3 rounded-full shadow-[0_0_15px] ${
+                isRefreshing 
+                  ? 'bg-amber-500 shadow-amber-500 animate-ping' 
+                  : justUpdated 
+                    ? 'bg-green-500 shadow-green-500' 
+                    : 'bg-amber-500 shadow-amber-500 animate-pulse'
+              }`}></div>
               <div className="flex flex-col items-start text-left">
                 <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-slate-300 transition-colors">Real-Time Data Bridge</span>
-                <span className={`text-xl font-black uppercase tracking-tight text-amber-500`}>
-                  {isRefreshing ? 'Syncing...' : 'Refresh Live Feed'}
+                <span className={`text-xl font-black uppercase tracking-tight ${
+                  justUpdated ? 'text-green-500' : 'text-amber-500'
+                }`}>
+                  {isRefreshing ? 'Syncing...' : justUpdated ? 'Updated' : 'Refresh Live Feed'}
                 </span>
               </div>
             </button>
