@@ -46,7 +46,8 @@ const calculateWacc = (t: TickerDefinition, sc: ScenarioConfig) => {
   const beta = t.beta || 1.1;
   const ke = rfRate + beta * erp; 
   
-  const mktCap = t.currentPrice * t.shares0;
+  const modelPrice = t.basePrice || t.currentPrice;
+  const mktCap = modelPrice * t.shares0;
   const totalDebt = t.debt || 0;
   const eqW = mktCap / (mktCap + totalDebt);
   const debtW = 1 - eqW;

@@ -40,12 +40,30 @@ export interface DeepDiveSection {
   metrics?: { label: string; value: string; color?: string }[];
 }
 
+export interface StockScenarioParams {
+  revGrowth: Record<ScenarioType, number[]>;
+  fcfMargin: Record<ScenarioType, number[]>;
+  termGrowth: Record<ScenarioType, number>;
+  exitMultiple: Record<ScenarioType, number>;
+  waccAdj?: Record<ScenarioType, number>;
+  desc: Record<ScenarioType, string>;
+  thesis?: Record<ScenarioType, string>;
+  drivers: Record<ScenarioType, Record<string, number | number[]>>;
+}
+
+export interface StockDefinition extends TickerDefinition {
+  scenarios: StockScenarioParams;
+}
+
 export interface TickerDefinition {
   ticker: string;
   name: string;
   sector: string;
   themeColor: string;
   currentPrice: number;
+  basePrice?: number; // Anchor price for evaluation model (WACC, etc)
+  fairPriceRange?: string;
+  active?: boolean;
   shares0: number;
   rev25: number;
   fcfMargin25: number;
