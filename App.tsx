@@ -5,7 +5,7 @@ import { calculateProjection, getInstitutionalRating } from './services/projecti
 import { TICKERS } from './constants';
 import ScenarioMetricsCard from './components/ScenarioMetricsCard';
 import StockDetailView from './components/StockDetailView';
-import TLNModel from './components/TLNModel';
+
 import SpotModel from './components/SpotModel';
 import SMCIModel from './components/SMCIModel';
 
@@ -189,22 +189,6 @@ const App: React.FC = () => {
   if (!tickerDef || !allProjections || !currentProjection || !investmentConclusion) return null;
 
   const activeStockData = universeData.find(s => s.ticker === tickerDef.ticker);
-
-  if (activeTicker === 'TLN') {
-    return (
-      <AnimatePresence mode="wait">
-        <TLNModel
-          key="TLN"
-          tickerDef={tickerDef}
-          currentProjection={currentProjection}
-          allProjections={allProjections}
-          investmentConclusion={investmentConclusion}
-          activeStockData={activeStockData}
-          onBack={() => setActiveTicker('home')}
-        />
-      </AnimatePresence>
-    );
-  }
 
   if (activeTicker === 'SPOT') {
     return (
