@@ -5,12 +5,12 @@ export const FICO: StockDefinition = {
   name: 'Fair Isaac Corp',
   sector: 'Analytics',
   themeColor: '#2979ff',
-  currentPrice: 1344.74,
-  fairPriceRange: '$1150 - $1780',
+  currentPrice: 1341,
+  fairPriceRange: '$1,270 - $1,900',
   active: true,
   shares0: 23.72,
-  rev25: 1991,
-  fcfMargin25: 0.37,
+  rev25: 1990,
+  fcfMargin25: 0.507,
   taxRate: 0.22,
   cash: 218,
   debt: 3200,
@@ -20,20 +20,20 @@ export const FICO: StockDefinition = {
   unit25: 600,
   modelType: 'DCF_ADVANCED',
   enhancementLabel: 'Platform pricing power',
-  rsRating: 16,
+  rsRating: 17,
   aiImpact: 'NEUTRAL',
-  strategicNarrative: "Pricing power bubble bursting. RS 16 reflects the end of the score monopoly's safe-haven status. Big money is exiting as alternatives and regulatory headwinds for credit analytics gain momentum. A core distribution candidate.",
+  strategicNarrative: "Structural compounder with cyclical tailwind. Q1 FY26 delivered best Scores quarter on record (+29% to $305M), Platform ARR +33%, NRR 122%, ACV bookings +36%, and mortgage revenue +60% — broad-based beat validating the platform transition. RS 17 reflects technical weakness amid broader market rotation, but fundamental/technical divergence creates asymmetric entry for conviction holders. 15%+ CAGR achievable even with P/E compression to 28–30x. Key risks: mortgage cycle reversal, regulatory changes, pricing pressure.",
   deepDive: [],
   scenarios: {
     revGrowth: {
-      [ScenarioType.BEAR]: [0.05, 0.04, 0.04, 0.03, 0.03],
-      [ScenarioType.BASE]: [0.08, 0.08, 0.07, 0.07, 0.06],
-      [ScenarioType.BULL]: [0.11, 0.10, 0.09, 0.08, 0.08]
+      [ScenarioType.BEAR]: [0.10, 0.09, 0.08, 0.07, 0.06],
+      [ScenarioType.BASE]: [0.15, 0.14, 0.13, 0.12, 0.11],
+      [ScenarioType.BULL]: [0.18, 0.17, 0.16, 0.14, 0.13]
     },
     fcfMargin: {
-      [ScenarioType.BEAR]: [0.3145, 0.3145, 0.3145, 0.3145, 0.3145],
-      [ScenarioType.BASE]: [0.37, 0.37, 0.37, 0.37, 0.37],
-      [ScenarioType.BULL]: [0.3885, 0.3885, 0.3885, 0.3885, 0.3885]
+      [ScenarioType.BEAR]: [0.43, 0.43, 0.43, 0.43, 0.43],
+      [ScenarioType.BASE]: [0.507, 0.507, 0.507, 0.507, 0.507],
+      [ScenarioType.BULL]: [0.53, 0.53, 0.53, 0.53, 0.53]
     },
     termGrowth: {
       [ScenarioType.BEAR]: 0.015,
@@ -41,8 +41,8 @@ export const FICO: StockDefinition = {
       [ScenarioType.BULL]: 0.03
     },
     exitMultiple: {
-      [ScenarioType.BEAR]: 24,
-      [ScenarioType.BASE]: 28,
+      [ScenarioType.BEAR]: 25,
+      [ScenarioType.BASE]: 30,
       [ScenarioType.BULL]: 32
     },
     waccAdj: {
@@ -51,9 +51,9 @@ export const FICO: StockDefinition = {
       [ScenarioType.BULL]: -0.005
     },
     desc: {
-      [ScenarioType.BEAR]: 'Economic headwinds leading to multiple compression and slower growth.',
-      [ScenarioType.BASE]: 'Market alignment with standard institutional growth expectations.',
-      [ScenarioType.BULL]: 'Category-defining growth powered by AI tailwinds and operating leverage.'
+      [ScenarioType.BEAR]: 'Mortgage cycle reversal and regulatory headwinds slow growth; multiple compresses to 25x as cyclical tailwind fades.',
+      [ScenarioType.BASE]: 'Platform ARR and Scores pricing sustain ~15% revenue growth; FCF margin holds above 50% with modest buyback support.',
+      [ScenarioType.BULL]: 'Mortgage boom, platform NRR expansion, and AI-driven demand for decisioning analytics drive 18%+ growth with multiple re-rating to 32x.'
     },
     drivers: {
       [ScenarioType.BEAR]: {
@@ -65,7 +65,7 @@ export const FICO: StockDefinition = {
       [ScenarioType.BASE]: {
         revPrem: [0.01, 0.01, 0.01, 0.01, 0.01],
         fcfUplift: [0.005, 0.005, 0.01, 0.01, 0.01],
-        bbRate: 0.015,
+        bbRate: 0.025,
         ebitdaProxy: 0.22
       },
       [ScenarioType.BULL]: {
@@ -73,7 +73,7 @@ export const FICO: StockDefinition = {
         fcfUplift: [0.01, 0.01, 0.01, 0.015, 0.015],
         bbRate: 0.02,
         ebitdaProxy: 0.35,
-        maOptVal: 1344.74 * 23.72 * 0.07
+        maOptVal: 1341 * 23.72 * 0.07
       }
     }
   }
