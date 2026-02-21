@@ -5,12 +5,12 @@ export const SPOT: StockDefinition = {
   name: 'Spotify Technology S.A.',
   sector: 'Interactive Media / Audio',
   themeColor: '#C5A572',
-  currentPrice: 469.88,
-  fairPriceRange: '$380 - $610',
+  currentPrice: 496,
+  fairPriceRange: '$430 - $660',
   active: true,
   shares0: 206,
-  rev25: 19800,
-  fcfMargin25: 0.174,
+  rev25: 17186,
+  fcfMargin25: 0.167,
   taxRate: 0.17,
   cash: 9500,
   debt: 3360,
@@ -20,20 +20,20 @@ export const SPOT: StockDefinition = {
   unit25: 290,
   modelType: 'DCF_ADVANCED',
   enhancementLabel: 'Audio TAM & M&A Option',
-  rsRating: 12,
+  rsRating: 14,
   aiImpact: 'DISRUPTION_RISK',
-  strategicNarrative: "Spotify faces an existential 'synthetic content' risk. LLM-generated music could saturate the catalog, potentially diluting human artist value and complicating royalty negotiations. The market (RS 12) is weighing this disruption against record gross margins and a superior personalization engine.",
+  strategicNarrative: "Spotify is transitioning into a genuine FCF compounder. Post-Q4'25, FCF CAGR ~20% is consensus with margin expansion from ~17% to ~23% by 2030. At P/FCF ~35x, the stock prices in continued excellence. The key debate: does SPOT deserve ≥28x FCF at maturity (vs Netflix 20-25x)? No longer a hope story — real cash generation, but premium valuation leaves limited margin of safety.",
   deepDive: [],
   scenarios: {
     revGrowth: {
-      [ScenarioType.BEAR]: [0.12, 0.10, 0.08, 0.06, 0.04],
-      [ScenarioType.BASE]: [0.16, 0.15, 0.14, 0.13, 0.12],
-      [ScenarioType.BULL]: [0.19, 0.18, 0.17, 0.16, 0.15]
+      [ScenarioType.BEAR]: [0.10, 0.10, 0.09, 0.07, 0.07],
+      [ScenarioType.BASE]: [0.14, 0.14, 0.13, 0.10, 0.11],
+      [ScenarioType.BULL]: [0.18, 0.18, 0.17, 0.13, 0.14]
     },
     fcfMargin: {
-      [ScenarioType.BEAR]: [0.15, 0.15, 0.15, 0.15, 0.15],
-      [ScenarioType.BASE]: [0.174, 0.174, 0.174, 0.174, 0.174],
-      [ScenarioType.BULL]: [0.1914, 0.1914, 0.1914, 0.1914, 0.1914]
+      [ScenarioType.BEAR]: [0.16, 0.17, 0.17, 0.19, 0.20],
+      [ScenarioType.BASE]: [0.183, 0.197, 0.206, 0.227, 0.233],
+      [ScenarioType.BULL]: [0.20, 0.22, 0.23, 0.25, 0.26]
     },
     termGrowth: {
       [ScenarioType.BEAR]: 0.02,
@@ -41,9 +41,9 @@ export const SPOT: StockDefinition = {
       [ScenarioType.BULL]: 0.03
     },
     exitMultiple: {
-      [ScenarioType.BEAR]: 14,
-      [ScenarioType.BASE]: 17,
-      [ScenarioType.BULL]: 19
+      [ScenarioType.BEAR]: 20,
+      [ScenarioType.BASE]: 25,
+      [ScenarioType.BULL]: 30
     },
     waccAdj: {
       [ScenarioType.BEAR]: 0.01,
@@ -51,29 +51,29 @@ export const SPOT: StockDefinition = {
       [ScenarioType.BULL]: -0.005
     },
     desc: {
-      [ScenarioType.BEAR]: 'Economic headwinds leading to multiple compression and slower growth.',
-      [ScenarioType.BASE]: 'Market alignment with standard institutional growth expectations.',
-      [ScenarioType.BULL]: 'Category-defining growth powered by AI tailwinds and operating leverage.'
+      [ScenarioType.BEAR]: 'Ads growth stalls, FCF margins plateau at ~20%, valued as mature media streamer (Netflix-like 20x).',
+      [ScenarioType.BASE]: 'Consensus FCF path holds — margin expansion to ~23%, valued as quality compounder at 25x.',
+      [ScenarioType.BULL]: 'Premium platform with runway — superior personalization + pricing power drives 26% FCF margins at 30x.'
     },
     drivers: {
       [ScenarioType.BEAR]: {
         revPrem: [0, 0, 0, 0, 0],
         fcfUplift: [0, 0, 0, 0, 0],
         bbRate: 0.005,
-        ebitdaProxy: 0.15
+        ebitdaProxy: 0.17
       },
       [ScenarioType.BASE]: {
         revPrem: [0.01, 0.01, 0.01, 0.01, 0.01],
         fcfUplift: [0.005, 0.005, 0.01, 0.01, 0.01],
         bbRate: 0.015,
-        ebitdaProxy: 0.22
+        ebitdaProxy: 0.25
       },
       [ScenarioType.BULL]: {
         revPrem: [0.015, 0.02, 0.02, 0.02, 0.02],
         fcfUplift: [0.01, 0.01, 0.01, 0.015, 0.015],
         bbRate: 0.03,
-        ebitdaProxy: 0.35,
-        maOptVal: 469.88 * 206 * 0.07
+        ebitdaProxy: 0.38,
+        maOptVal: 496 * 206 * 0.07
       }
     }
   }
