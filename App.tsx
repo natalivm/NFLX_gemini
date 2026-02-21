@@ -7,6 +7,7 @@ import ScenarioMetricsCard from './components/ScenarioMetricsCard';
 import StockDetailView from './components/StockDetailView';
 import TLNModel from './components/TLNModel';
 import SpotModel from './components/SpotModel';
+
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils';
 
