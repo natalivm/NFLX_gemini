@@ -5,8 +5,6 @@ import { calculateProjection, getInstitutionalRating } from './services/projecti
 import { TICKERS } from './constants';
 import StockDetailView from './components/StockDetailView';
 
-import SMCIModel from './components/SMCIModel';
-
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils';
 
@@ -187,21 +185,6 @@ const App: React.FC = () => {
   if (!tickerDef || !allProjections || !currentProjection || !investmentConclusion) return null;
 
   const activeStockData = universeData.find(s => s.ticker === tickerDef.ticker);
-
-  if (activeTicker === 'SMCI') {
-    return (
-      <AnimatePresence mode="wait">
-        <SMCIModel
-          tickerDef={tickerDef}
-          currentProjection={currentProjection}
-          allProjections={allProjections}
-          investmentConclusion={investmentConclusion}
-          activeStockData={activeStockData}
-          onBack={() => setActiveTicker('home')}
-        />
-      </AnimatePresence>
-    );
-  }
 
   return (
     <AnimatePresence mode="wait">
