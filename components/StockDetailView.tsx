@@ -10,6 +10,7 @@ import {
   Info
 } from 'lucide-react';
 import { TickerDefinition, ProjectionData, ScenarioType } from '../types';
+import { getInstitutionalRating } from '../services/projectionService';
 import ScenarioMetricsCard from './ScenarioMetricsCard';
 import { cn } from '../utils';
 
@@ -33,6 +34,7 @@ const StockDetailView: React.FC<Props> = ({
   const usd = (n: number) => "$" + n.toFixed(2);
   const pct = (n: number) => (n * 100).toFixed(1) + "%";
   const tc = tickerDef.themeColor;
+  const verdictRating = getInstitutionalRating(investmentConclusion.pwAvg, tickerDef.currentPrice);
 
   return (
     <motion.div
@@ -205,8 +207,13 @@ const StockDetailView: React.FC<Props> = ({
               <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 mb-8 mt-1">Model Verdict</h3>
               <div className="space-y-6">
                 <div className="flex flex-col gap-1 border-b border-slate-800 pb-4">
+                  <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Rating</span>
+                  <span className={cn("text-2xl font-black leading-none", verdictRating.color)}>{verdictRating.label}</span>
+                  <span className="text-[11px] text-slate-400 mt-2 leading-relaxed">{verdictRating.action}</span>
+                </div>
+                <div className="flex flex-col gap-1 border-b border-slate-800 pb-4">
                   <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">5Y Prob-Weighted CAGR</span>
-                  <span className="text-3xl font-black leading-none text-white">{pct(investmentConclusion.cagr / 100)}</span>
+                  <span className={cn("text-3xl font-black leading-none", investmentConclusion.cagr >= 15 ? 'text-green-500' : investmentConclusion.cagr >= 12 ? 'text-amber-400' : investmentConclusion.cagr >= 8 ? 'text-orange-400' : 'text-red-500')}>{pct(investmentConclusion.cagr / 100)}</span>
                 </div>
                 <div className="flex flex-col gap-1 border-b border-slate-800 pb-4">
                   <span className="text-[10px] text-slate-500 uppercase font-black tracking-widest">Blended Value</span>

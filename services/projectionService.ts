@@ -8,35 +8,47 @@ import {
 import { CONFIGS } from '../constants';
 
 /**
- * Standardized Rating Logic
+ * Standardized Rating Logic — CAGR-based 4-tier verdicts
  */
 export const getInstitutionalRating = (target: number, spot: number) => {
-  const uplift = target - spot;
-  const downsideRatio = target / spot;
+  const cagr = (Math.pow(target / spot, 1 / 5) - 1) * 100;
 
-  if (uplift > 30) {
-    return { 
-      label: 'STRONG BUY', 
-      status: 'undervalued' as const, 
-      color: 'text-green-500', 
-      dot: 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.8)]' 
-    };
-  }
-  
-  if (downsideRatio < 0.96) {
-    return { 
-      label: 'AVOID', 
-      status: 'overvalued' as const, 
-      color: 'text-red-500', 
-      dot: 'bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]' 
+  if (cagr >= 15) {
+    return {
+      label: 'STRONG BUY',
+      status: 'undervalued' as const,
+      color: 'text-green-500',
+      dot: 'bg-green-500 shadow-[0_0_12px_rgba(34,197,94,0.8)]',
+      action: 'Strong entry — expected returns exceed hurdle rate'
     };
   }
 
-  return { 
-    label: 'HOLD', 
-    status: 'fair price' as const, 
-    color: 'text-blue-400', 
-    dot: 'bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.8)]' 
+  if (cagr >= 12) {
+    return {
+      label: 'ACCUMULATE',
+      status: 'accumulate' as const,
+      color: 'text-amber-400',
+      dot: 'bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.8)]',
+      action: 'Market-beating returns, but not enough margin of safety for full position'
+    };
+  }
+
+  if (cagr >= 8) {
+    return {
+      label: 'HOLD',
+      status: 'fair price' as const,
+      color: 'text-orange-400',
+      dot: 'bg-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.8)]',
+      action: 'Decent business, priced for it — wait for better entry'
+    };
+  }
+
+  return {
+    label: 'PASS',
+    status: 'overvalued' as const,
+    color: 'text-red-500',
+    dot: 'bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.8)]',
+    action: 'Insufficient return for the risk profile'
   };
 };
 

@@ -9,9 +9,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils';
 
 const TAG_DEFS = [
-  { tag: 'STRONG BUY', label: 'STRONG BUY', color: 'text-green-400', activeBorder: 'border-green-500', activeBg: 'bg-green-500/10', dot: 'bg-green-500' },
-  { tag: 'HOLD',       label: 'HOLD',        color: 'text-blue-400',  activeBorder: 'border-blue-500',  activeBg: 'bg-blue-500/10',  dot: 'bg-blue-500'  },
-  { tag: 'AVOID',      label: 'AVOID',       color: 'text-red-400',   activeBorder: 'border-red-500',   activeBg: 'bg-red-500/10',   dot: 'bg-red-500'   },
+  { tag: 'STRONG BUY', label: 'STRONG BUY', color: 'text-green-400',  activeBorder: 'border-green-500', activeBg: 'bg-green-500/10', dot: 'bg-green-500'  },
+  { tag: 'ACCUMULATE',  label: 'ACCUMULATE',  color: 'text-amber-400',  activeBorder: 'border-amber-500', activeBg: 'bg-amber-500/10', dot: 'bg-amber-500'  },
+  { tag: 'HOLD',        label: 'HOLD',        color: 'text-orange-400', activeBorder: 'border-orange-500', activeBg: 'bg-orange-500/10', dot: 'bg-orange-500' },
+  { tag: 'PASS',        label: 'PASS',        color: 'text-red-400',    activeBorder: 'border-red-500',   activeBg: 'bg-red-500/10',   dot: 'bg-red-500'    },
   { tag: 'TAILWIND',         label: 'AI TAILWIND', color: 'text-emerald-400', activeBorder: 'border-emerald-500', activeBg: 'bg-emerald-500/10', dot: 'bg-emerald-500' },
   { tag: 'DISRUPTION_RISK',  label: 'AI RISK',     color: 'text-orange-400',  activeBorder: 'border-orange-500',  activeBg: 'bg-orange-500/10',  dot: 'bg-orange-500'  },
 ] as const;
