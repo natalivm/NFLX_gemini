@@ -18,7 +18,7 @@ interface Props {
   currentProjection: ProjectionData;
   allProjections: Record<ScenarioType, ProjectionData>;
   investmentConclusion: { pwAvg: number; cagr: number };
-  activeStockData: any;
+  activeStockData: { label: string } | undefined;
   onBack: () => void;
 }
 
