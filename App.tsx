@@ -7,6 +7,8 @@ import ScenarioMetricsCard from './components/ScenarioMetricsCard';
 import StockDetailView from './components/StockDetailView';
 import TLNModel from './components/TLNModel';
 import SpotModel from './components/SpotModel';
+import SMCIModel from './components/SMCIModel';
+
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils';
 
@@ -166,7 +168,12 @@ const App: React.FC = () => {
                   <span className="text-2xl lg:text-3xl font-black text-white group-hover:text-[#ff007f] transition-colors tracking-tighter w-28 flex-shrink-0">{stock.ticker}</span>
                   <span className="text-base font-bold text-blue-400 mono w-24 flex-shrink-0">${liveTickers[stock.ticker].currentPrice.toFixed(2)}</span>
                   <span className={cn("text-xs font-black uppercase tracking-widest w-28 flex-shrink-0", stock.color)}>{stock.label}</span>
-                  <span className="text-sm font-bold text-slate-300 mono border border-slate-600 rounded px-1.5 py-0.5 flex-shrink-0">RS {liveTickers[stock.ticker].rsRating}</span>
+                  <span className={cn(
+                    "text-sm font-bold mono border rounded px-1.5 py-0.5 flex-shrink-0",
+                    liveTickers[stock.ticker].rsRating >= 80 ? 'text-green-400 border-green-700' :
+                    liveTickers[stock.ticker].rsRating >= 40 ? 'text-white border-slate-600' :
+                    'text-red-400 border-red-800'
+                  )}>RS {liveTickers[stock.ticker].rsRating}</span>
                   <span className="text-sm font-bold text-slate-400 mono">{stock.fairPriceRange}</span>
                 </motion.button>
                 );
@@ -181,17 +188,45 @@ const App: React.FC = () => {
 
   if (!tickerDef || !allProjections || !currentProjection || !investmentConclusion) return null;
 
-  if (activeTicker === 'TLN') {
-    return <TLNModel onBack={() => setActiveTicker('home')} />;
-  }
-
   const activeStockData = universeData.find(s => s.ticker === tickerDef.ticker);
+
+  if (activeTicker === 'TLN') {
+    return (
+      <AnimatePresence mode="wait">
+        <TLNModel
+          key="TLN"
+          tickerDef={tickerDef}
+          currentProjection={currentProjection}
+          allProjections={allProjections}
+          investmentConclusion={investmentConclusion}
+          activeStockData={activeStockData}
+          onBack={() => setActiveTicker('home')}
+        />
+      </AnimatePresence>
+    );
+  }
 
   if (activeTicker === 'SPOT') {
     return (
       <AnimatePresence mode="wait">
         <SpotModel
           key="SPOT"
+          tickerDef={tickerDef}
+          currentProjection={currentProjection}
+          allProjections={allProjections}
+          investmentConclusion={investmentConclusion}
+          activeStockData={activeStockData}
+          onBack={() => setActiveTicker('home')}
+        />
+      </AnimatePresence>
+    );
+  }
+
+  if (activeTicker === 'SMCI') {
+    return (
+      <AnimatePresence mode="wait">
+        <SMCIModel
+          key="SMCI"
           tickerDef={tickerDef}
           currentProjection={currentProjection}
           allProjections={allProjections}
