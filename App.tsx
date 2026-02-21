@@ -7,7 +7,7 @@ import ScenarioMetricsCard from './components/ScenarioMetricsCard';
 import StockDetailView from './components/StockDetailView';
 import TLNModel from './components/TLNModel';
 import SpotModel from './components/SpotModel';
-import PANWModel from './components/PANWModel';
+
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from './utils';
 
@@ -187,14 +187,6 @@ const App: React.FC = () => {
   }
 
   const activeStockData = universeData.find(s => s.ticker === tickerDef.ticker);
-
-  if (activeTicker === 'PANW') {
-    return (
-      <AnimatePresence mode="wait">
-        <PANWModel key="PANW" onBack={() => setActiveTicker('home')} />
-      </AnimatePresence>
-    );
-  }
 
   if (activeTicker === 'SPOT') {
     return (
