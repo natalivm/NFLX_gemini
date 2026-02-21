@@ -27,8 +27,9 @@ import { SPGI } from './SPGI';
 import { SMWB } from './SMWB';
 import { GXO } from './GXO';
 import { MNST } from './MNST';
+import { AVGO } from './AVGO';
 import { StockDefinition } from '../types';
 
 export const ALL_STOCKS: Record<string, StockDefinition> = {
-  SPOT, DASH, EME, MRVL, SOFI, ENVA, WWD, ITT, ANET, CRDO, ASTS, VST, KKR, CEG, SPGI, GXO, SMWB, PINS, RBRK, PANW, UBER, FTNT, DUOL, FICO, TLN, AGCO, NFLX, DE, MNST
+  SPOT, DASH, EME, MRVL, SOFI, ENVA, WWD, ITT, ANET, CRDO, ASTS, VST, KKR, CEG, SPGI, GXO, SMWB, PINS, RBRK, PANW, UBER, FTNT, DUOL, FICO, TLN, AGCO, NFLX, DE, MNST, AVGO
 };
