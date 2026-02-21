@@ -5,35 +5,38 @@ export const PANW: StockDefinition = {
   name: 'Palo Alto Networks',
   sector: 'Cybersecurity',
   themeColor: '#00a3e0',
-  currentPrice: 166.95,
-  fairPriceRange: '$140 - $250',
+  currentPrice: 149.0,
+  fairPriceRange: '$160 - $230',
   active: true,
-  shares0: 808.0,
+  shares0: 697.0,
   rev25: 9200,
-  fcfMargin25: 0.376,
+  fcfMargin25: 0.37,
   taxRate: 0.20,
-  cash: 3200,
-  debt: 4883,
+  cash: 7900,
+  debt: 5500,
   beta: 1.20,
   costDebt: 0.05,
-  unitLabel: 'ARR',
-  unit25: 9.2,
+  unitLabel: 'NGS ARR',
+  unit25: 6.3,
   modelType: 'DCF_ADVANCED',
-  enhancementLabel: 'Platformization Success',
+  enhancementLabel: 'Platformization + AI Security',
   rsRating: 20,
   aiImpact: 'TAILWIND',
-  strategicNarrative: "Fundamentals say 'consolidation winner', but RS 20 says 'broken'. The market is punishing the friction of their free-trial platformization shift. DCF math reveals value, but institutions are in distribution mode. Avoid until the tape stabilizes.",
+  strategicNarrative: "Q2 FY2026: beat estimates (NGS ARR +33% to $6.3B, RPO +23%), but FY2026 EPS guidance lowered to $3.65–3.70 from $3.80 due to CyberArk + Chronosphere integration costs. Platform is working — 1,550 platformized customers, 119% NRR, SASE ARR >$1.5B (+40%). CyberArk deal (closed Feb 11) adds Identity as 4th pillar; Chronosphere adds observability. Stock -18% over 52 weeks (RS ~20). Tape is broken — wait for integration clarity and RS recovery before adding.",
   deepDive: [],
   scenarios: {
     revGrowth: {
-      [ScenarioType.BEAR]: [0.06, 0.05, 0.05, 0.04, 0.04],
-      [ScenarioType.BASE]: [0.12, 0.11, 0.10, 0.09, 0.08],
-      [ScenarioType.BULL]: [0.16, 0.15, 0.14, 0.13, 0.12]
+      // FY2025 base: $9.2B. FY2026 guidance: $11.28–11.31B (+23% incl. M&A).
+      // Consensus path: FY27E $13.1B, FY28E $14.9B, FY29E $16.3B, FY30E $18.2B
+      [ScenarioType.BEAR]: [0.12, 0.09, 0.07, 0.05, 0.05],
+      [ScenarioType.BASE]: [0.23, 0.16, 0.14, 0.09, 0.12],
+      [ScenarioType.BULL]: [0.27, 0.20, 0.17, 0.13, 0.13]
     },
     fcfMargin: {
-      [ScenarioType.BEAR]: [0.3196, 0.3196, 0.3196, 0.3196, 0.3196],
-      [ScenarioType.BASE]: [0.376, 0.376, 0.376, 0.376, 0.376],
-      [ScenarioType.BULL]: [0.4324, 0.4324, 0.4324, 0.4324, 0.4324]
+      // FY2026 guidance: 37% adj. FCF margin. Target 40%+ by FY2028.
+      [ScenarioType.BEAR]: [0.28, 0.28, 0.30, 0.30, 0.30],
+      [ScenarioType.BASE]: [0.37, 0.37, 0.39, 0.40, 0.40],
+      [ScenarioType.BULL]: [0.40, 0.41, 0.43, 0.44, 0.45]
     },
     termGrowth: {
       [ScenarioType.BEAR]: 0.015,
@@ -43,7 +46,7 @@ export const PANW: StockDefinition = {
     exitMultiple: {
       [ScenarioType.BEAR]: 12,
       [ScenarioType.BASE]: 16,
-      [ScenarioType.BULL]: 19
+      [ScenarioType.BULL]: 20
     },
     waccAdj: {
       [ScenarioType.BEAR]: 0.01,
@@ -51,9 +54,9 @@ export const PANW: StockDefinition = {
       [ScenarioType.BULL]: -0.005
     },
     desc: {
-      [ScenarioType.BEAR]: 'Economic headwinds leading to multiple compression and slower growth.',
-      [ScenarioType.BASE]: 'Market alignment with standard institutional growth expectations.',
-      [ScenarioType.BULL]: 'Category-defining growth powered by AI tailwinds and operating leverage.'
+      [ScenarioType.BEAR]: 'Integration friction from CyberArk/Chronosphere weighs on growth; SaaS sector rotation persists. Organic deceleration offsets M&A contribution.',
+      [ScenarioType.BASE]: 'Consensus path: M&A integration on track, NGS ARR sustains ~30%+ growth, FCF margins hold 37-40%. Platformization drives durable revenue at scale.',
+      [ScenarioType.BULL]: 'Agentic AI security becomes enterprise standard; CyberArk identity + Cortex XSIAM unlock cross-sell at scale. NGS ARR targets $20B by FY2030 achieved.'
     },
     drivers: {
       [ScenarioType.BEAR]: {
@@ -73,7 +76,7 @@ export const PANW: StockDefinition = {
         fcfUplift: [0.01, 0.01, 0.01, 0.015, 0.015],
         bbRate: 0.03,
         ebitdaProxy: 0.35,
-        maOptVal: 166.95 * 808.0 * 0.07
+        maOptVal: 149.0 * 697.0 * 0.07
       }
     }
   }
