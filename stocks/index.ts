@@ -30,8 +30,9 @@ import { MNST } from './MNST';
 import { CLS } from './CLS';
 import { SMCI } from './SMCI';
 import { AVGO } from './AVGO';
+import { MELI } from './MELI';
 import { StockDefinition } from '../types';
 
 export const ALL_STOCKS: Record<string, StockDefinition> = {
-  SPOT, DASH, EME, MRVL, SOFI, ENVA, WWD, ITT, ANET, CRDO, ASTS, VST, KKR, CEG, SPGI, GXO, SMWB, PINS, RBRK, PANW, UBER, FTNT, DUOL, FICO, TLN, AGCO, NFLX, DE, MNST, CLS, SMCI, AVGO
+  SPOT, DASH, EME, MRVL, SOFI, ENVA, WWD, ITT, ANET, CRDO, ASTS, VST, KKR, CEG, SPGI, GXO, SMWB, PINS, RBRK, PANW, UBER, FTNT, DUOL, FICO, TLN, AGCO, NFLX, DE, MNST, CLS, SMCI, AVGO, MELI
 };
