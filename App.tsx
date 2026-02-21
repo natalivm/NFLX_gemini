@@ -27,10 +27,19 @@ const STOCKS: StockRow[] = Object.values(TICKERS).map(t => ({
   active: t.active
 }));
 
+const TAG_DEFS = [
+  { tag: 'STRONG BUY', label: 'STRONG BUY', color: 'text-green-400', activeBorder: 'border-green-500', activeBg: 'bg-green-500/10', dot: 'bg-green-500' },
+  { tag: 'HOLD',       label: 'HOLD',        color: 'text-blue-400',  activeBorder: 'border-blue-500',  activeBg: 'bg-blue-500/10',  dot: 'bg-blue-500'  },
+  { tag: 'AVOID',      label: 'AVOID',       color: 'text-red-400',   activeBorder: 'border-red-500',   activeBg: 'bg-red-500/10',   dot: 'bg-red-500'   },
+  { tag: 'TAILWIND',         label: 'AI TAILWIND', color: 'text-emerald-400', activeBorder: 'border-emerald-500', activeBg: 'bg-emerald-500/10', dot: 'bg-emerald-500' },
+  { tag: 'DISRUPTION_RISK',  label: 'AI RISK',     color: 'text-orange-400',  activeBorder: 'border-orange-500',  activeBg: 'bg-orange-500/10',  dot: 'bg-orange-500'  },
+] as const;
+
 const App: React.FC = () => {
   const [activeTicker, setActiveTicker] = useState<ViewType>('home');
   const [liveTickers, setLiveTickers] = useState<Record<string, TickerDefinition>>(TICKERS);
   const [isLoading, setIsLoading] = useState(true);
+  const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -59,9 +68,28 @@ const App: React.FC = () => {
     return STOCKS.map(s => {
       const proj = calculateProjection(s.ticker, ScenarioType.BASE, liveTickers, true);
       const rating = getInstitutionalRating(proj.pricePerShare!, liveTickers[s.ticker].currentPrice);
-      return { ...s, ...rating };
+      return { ...s, ...rating, aiImpact: liveTickers[s.ticker].aiImpact };
     }).sort((a, b) => a.ticker.localeCompare(b.ticker));
   }, [liveTickers]);
+
+  const tagCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    TAG_DEFS.forEach(({ tag }) => {
+      counts[tag] = universeData.filter(s => s.label === tag || s.aiImpact === tag).length;
+    });
+    return counts;
+  }, [universeData]);
+
+  const sortedData = useMemo(() => {
+    if (!activeTagFilter) return universeData;
+    return [...universeData].sort((a, b) => {
+      const aMatch = a.label === activeTagFilter || a.aiImpact === activeTagFilter;
+      const bMatch = b.label === activeTagFilter || b.aiImpact === activeTagFilter;
+      if (aMatch && !bMatch) return -1;
+      if (!aMatch && bMatch) return 1;
+      return a.ticker.localeCompare(b.ticker);
+    });
+  }, [universeData, activeTagFilter]);
 
   const investmentConclusion = useMemo(() => {
     if (!allProjections || !tickerDef) return null;
@@ -106,15 +134,60 @@ const App: React.FC = () => {
             exit={{ opacity: 0 }}
             className="min-h-screen bg-[#0d1630] overflow-y-auto px-4 lg:px-24 pt-20 pb-24 scrollbar-hide"
           >
-            <div className="max-w-4xl mx-auto space-y-1 mb-12">
-              {universeData.map((stock, idx) => (
-                <motion.button 
-                  key={stock.ticker} 
+            <div className="max-w-4xl mx-auto mb-12">
+              {/* Tag Counters */}
+              <div className="flex flex-wrap gap-2 mb-6 pt-1">
+                {TAG_DEFS.map(({ tag, label, color, activeBorder, activeBg, dot }) => {
+                  const count = tagCounts[tag];
+                  const isActive = activeTagFilter === tag;
+                  return (
+                    <button
+                      key={tag}
+                      onClick={() => setActiveTagFilter(isActive ? null : tag)}
+                      className={cn(
+                        "flex items-center gap-2 px-3 py-1.5 rounded-full border text-[10px] font-black uppercase tracking-widest transition-all duration-200",
+                        isActive
+                          ? `${activeBorder} ${activeBg} ${color}`
+                          : "border-slate-700/60 text-slate-500 hover:border-slate-500 hover:text-slate-400"
+                      )}
+                    >
+                      <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", isActive ? dot : 'bg-slate-600')}></span>
+                      {label}
+                      <span className={cn(
+                        "font-mono text-[9px] px-1.5 py-0.5 rounded",
+                        isActive ? `${activeBg} ${color}` : 'bg-slate-800 text-slate-500'
+                      )}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+                {activeTagFilter && (
+                  <button
+                    onClick={() => setActiveTagFilter(null)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-700/60 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-300 hover:border-slate-500 transition-all duration-200"
+                  >
+                    <span className="text-[10px]">✕</span> CLEAR
+                  </button>
+                )}
+              </div>
+
+              {/* Stock List */}
+              <div className="space-y-1">
+              {sortedData.map((stock, idx) => {
+                const isTagMatch = activeTagFilter && (stock.label === activeTagFilter || stock.aiImpact === activeTagFilter);
+                return (
+                <motion.button
+                  key={stock.ticker}
+                  layout
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: idx * 0.02 }}
-                  onClick={() => setActiveTicker(stock.ticker)} 
-                  className="w-full flex items-center justify-between py-4 px-4 group transition-all duration-300 border-b border-slate-800/50 hover:bg-white/5 text-left"
+                  onClick={() => setActiveTicker(stock.ticker)}
+                  className={cn(
+                    "w-full flex items-center justify-between py-4 px-4 group transition-all duration-300 border-b border-slate-800/50 hover:bg-white/5 text-left",
+                    isTagMatch ? "bg-white/[0.03]" : ""
+                  )}
                 >
                   <div className="flex items-center gap-4">
                     <span className="text-3xl lg:text-4xl font-black text-white group-hover:text-[#ff007f] transition-colors tracking-tighter leading-none">{stock.ticker}</span>
@@ -128,7 +201,9 @@ const App: React.FC = () => {
                     <div className={cn("w-3 h-3 rounded-full", stock.dot)}></div>
                   </div>
                 </motion.button>
-              ))}
+                );
+              })}
+              </div>
             </div>
           </motion.div>
         )}
