@@ -31,7 +31,3 @@ import { StockDefinition } from '../types';
 export const ALL_STOCKS: Record<string, StockDefinition> = {
   SPOT, DASH, EME, MRVL, SOFI, ENVA, WWD, ITT, ANET, CRDO, ASTS, VST, KKR, CEG, SPGI, GXO, SMWB, PINS, RBRK, PANW, UBER, FTNT, DUOL, FICO, TLN, AGCO, NFLX, DE
 };
-
-export {
-  SPOT, DASH, EME, MRVL, SOFI, ENVA, WWD, ITT, ANET, CRDO, ASTS, VST, KKR, UBER, NFLX, CEG, DE, PANW, PINS, RBRK, FTNT, DUOL, FICO, TLN, AGCO, SPGI, SMWB, GXO
-};

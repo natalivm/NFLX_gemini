@@ -6,26 +6,7 @@ import { TICKERS } from './constants';
 import ScenarioMetricsCard from './components/ScenarioMetricsCard';
 import StockDetailView from './components/StockDetailView';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  LayoutDashboard, 
-  ShieldCheck, 
-  ArrowLeft,
-} from 'lucide-react';
 import { cn } from './utils';
-
-type ViewType = 'home' | string;
-
-interface StockRow {
-  ticker: string;
-  fairPriceRange: string;
-  active?: boolean;
-}
-
-const STOCKS: StockRow[] = Object.values(TICKERS).map(t => ({
-  ticker: t.ticker,
-  fairPriceRange: t.fairPriceRange || 'N/A',
-  active: t.active
-}));
 
 const TAG_DEFS = [
   { tag: 'STRONG BUY', label: 'STRONG BUY', color: 'text-green-400', activeBorder: 'border-green-500', activeBg: 'bg-green-500/10', dot: 'bg-green-500' },
@@ -36,7 +17,7 @@ const TAG_DEFS = [
 ] as const;
 
 const App: React.FC = () => {
-  const [activeTicker, setActiveTicker] = useState<ViewType>('home');
+  const [activeTicker, setActiveTicker] = useState<string>('home');
   const [liveTickers, setLiveTickers] = useState<Record<string, TickerDefinition>>(TICKERS);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTagFilter, setActiveTagFilter] = useState<string | null>(null);
@@ -48,27 +29,24 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const scenario = ScenarioType.BASE;
-  const showEnhancements = true;
-
   const tickerDef = activeTicker !== 'home' ? liveTickers[activeTicker] : null;
 
   const allProjections = useMemo(() => {
     if (!tickerDef) return null;
     return {
-      [ScenarioType.BEAR]: calculateProjection(activeTicker, ScenarioType.BEAR, liveTickers, showEnhancements),
-      [ScenarioType.BASE]: calculateProjection(activeTicker, ScenarioType.BASE, liveTickers, showEnhancements),
-      [ScenarioType.BULL]: calculateProjection(activeTicker, ScenarioType.BULL, liveTickers, showEnhancements),
+      [ScenarioType.BEAR]: calculateProjection(activeTicker, ScenarioType.BEAR, liveTickers, true),
+      [ScenarioType.BASE]: calculateProjection(activeTicker, ScenarioType.BASE, liveTickers, true),
+      [ScenarioType.BULL]: calculateProjection(activeTicker, ScenarioType.BULL, liveTickers, true),
     };
   }, [activeTicker, liveTickers]);
 
-  const currentProjection = allProjections ? allProjections[scenario] : null;
+  const currentProjection = allProjections ? allProjections[ScenarioType.BASE] : null;
 
   const universeData = useMemo(() => {
-    return STOCKS.map(s => {
-      const proj = calculateProjection(s.ticker, ScenarioType.BASE, liveTickers, true);
-      const rating = getInstitutionalRating(proj.pricePerShare!, liveTickers[s.ticker].currentPrice);
-      return { ...s, ...rating, aiImpact: liveTickers[s.ticker].aiImpact };
+    return Object.values(liveTickers).map(t => {
+      const proj = calculateProjection(t.ticker, ScenarioType.BASE, liveTickers, true);
+      const rating = getInstitutionalRating(proj.pricePerShare!, t.currentPrice);
+      return { ticker: t.ticker, fairPriceRange: t.fairPriceRange || 'N/A', active: t.active, ...rating, aiImpact: t.aiImpact };
     }).sort((a, b) => a.ticker.localeCompare(b.ticker));
   }, [liveTickers]);
 
@@ -107,7 +85,7 @@ const App: React.FC = () => {
     return (
       <AnimatePresence mode="wait">
         {isLoading ? (
-          <motion.div 
+          <motion.div
             key="loader"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -117,7 +95,7 @@ const App: React.FC = () => {
             <div className="absolute inset-0 opacity-10 pointer-events-none">
               <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#ff007f_0%,transparent_60%)]"></div>
             </div>
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
@@ -127,7 +105,7 @@ const App: React.FC = () => {
             </motion.div>
           </motion.div>
         ) : (
-          <motion.div 
+          <motion.div
             key="list"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -211,17 +189,17 @@ const App: React.FC = () => {
     );
   }
 
-  if (!tickerDef || !currentProjection || !investmentConclusion) return null;
+  if (!tickerDef || !allProjections || !currentProjection || !investmentConclusion) return null;
 
   const activeStockData = universeData.find(s => s.ticker === tickerDef.ticker);
-  
+
   return (
     <AnimatePresence mode="wait">
-      <StockDetailView 
+      <StockDetailView
         key={tickerDef.ticker}
         tickerDef={tickerDef}
         currentProjection={currentProjection}
-        allProjections={allProjections as any}
+        allProjections={allProjections}
         investmentConclusion={investmentConclusion}
         activeStockData={activeStockData}
         onBack={() => setActiveTicker('home')}

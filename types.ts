@@ -7,7 +7,7 @@ export enum ScenarioType {
   BULL = 'bull'
 }
 
-export type ValuationModelType = 'DCF_ADVANCED' | 'PE_MULTIPLE' | 'HARDCODED_PATH';
+export type ValuationModelType = 'DCF_ADVANCED';
 
 export interface ScenarioConfig {
   label: string;
@@ -15,22 +15,12 @@ export interface ScenarioConfig {
   bg: string;
   revGrowth: number[];
   fcfMargin: number[];
-  peMultiple?: number[]; // For PE_MULTIPLE model
-  exitMultiple?: number; // For DCF model
+  exitMultiple?: number;
   termGrowth?: number;
   waccAdj?: number;
   desc: string;
   thesis?: string;
-  // Dynamic drivers that vary by stock
   drivers?: Record<string, number | number[]>;
-  // Legacy fields kept for backward compatibility during transition
-  fcfGr?: number[];
-  bb?: number;
-  adRev?: number[];
-  impact?: number[];
-  waccRange?: string;
-  hardcodedTrajectory?: number[];
-  hardcodedConservative?: number[];
 }
 
 export interface DeepDiveSection {
