@@ -88,6 +88,7 @@ const App: React.FC = () => {
           <motion.div
             key="loader"
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             className="min-h-screen bg-[#0a1128] flex flex-col items-center justify-center p-12 lg:p-24 overflow-hidden"
           >
             <div className="absolute inset-0 opacity-10 pointer-events-none">
