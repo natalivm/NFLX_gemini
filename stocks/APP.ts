@@ -21,24 +21,11 @@ export const APP = defineStock({
   rsTrend: 'falling',
   aiImpact: 'TAILWIND',
   strategicNarrative:
-    "Type B — cyclical growth with strong execution-moat, not a classic structural compounder. " +
-    "Post-earnings update: Q4'25 $1.66B rev (+66% YoY), Adj EBITDA $1.4B (+82% YoY, ~84% margin), FCF $1.31B (+88% YoY). " +
-    "FY'25: $5.48B rev (+70%), $4.51B EBITDA (+87%, ~82% margin), $3.95B FCF (+91%). " +
-    "Q1'26 guide: $1.745-1.775B (+5-7% QoQ despite seasonality), EBITDA margin ~84%. " +
-    "~95% incremental revenue flow-through to EBITDA — top-tier quality of growth. " +
-    "Moat: network effects + data scale + MAX auction lock-in (often >50% of publisher UA spend). " +
-    "Self-serve GA on track 1H'26. CAC/LTV 30-day breakeven — very strong scalable growth loop signal. " +
-    "GenAI creative tools: 100+ clients pilot, video-gen model shortly. " +
-    "Conversion rate: historically ~1%, 'confident ads' up to 5% — upside lever from advertiser diversity. " +
-    "FY buybacks $2.58B (shares 346M→340M, -1.7%). Remaining auth ~$3.28B. " +
-    "Margin expansion nearly exhausted at 82-84% EBITDA. From here, growth ≈ revenue growth + buybacks. " +
-    "Platform broadening (e-comm, lead gen, CTV) adds anti-cyclical buffer but ad-cycle exposure remains. " +
-    "Meta already bidding on ID-traffic — competition real but 'pie expands' with bid density per mgmt. " +
-    "Probability of 15%+ CAGR: ~60-65% (up from 55-60% pre-call). " +
-    "RS 26 — very weak, momentum broken, -38% from peak. Not institutional favourite. " +
-    "Execution split: 50% execution + 30% structural AI ad trend + 20% ad cycle. " +
-    "Key risks: multiple compression (P/E 18-20x = -25-33% downside), ad-cycle, Meta/no-ID competition, black-box narrative. " +
-    "Not buy-and-forget. High-margin growth engine transitioning from hyper-growth to normalized growth.",
+    "AppLovin is the highest-margin ad-tech engine in the market — 84% EBITDA margin, 95% incremental flow-through, $4B FCF. " +
+    "Post-earnings: CAC/LTV 30-day breakeven + self-serve GA 1H'26 + GenAI creative tools signal a scalable growth loop beyond gaming. " +
+    "The problem: margin expansion is exhausted at 82-84% EBITDA, so from here growth = revenue growth, and RS 26 says institutions aren't buying yet. " +
+    "If self-serve + e-comm broaden the advertiser base, this is a 15%+ compounder. If ad cycle breaks, the leverage that created 84% margins works in brutal reverse. " +
+    "60-65% probability of 15%+ CAGR — strong execution story, cyclical and priced for it.",
 
   revGrowth: [
     [0.20, 0.12, 0.10, 0.10, 0.08],
