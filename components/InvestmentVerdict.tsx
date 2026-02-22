@@ -151,19 +151,25 @@ const InvestmentVerdict: React.FC<Props> = ({
         <div className="flex flex-col gap-2 shrink-0">
           <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Is it a Buy?</span>
           {(() => {
-            const v = VERDICT_DISPLAY[activeStockData?.label || 'HOLD'] || VERDICT_DISPLAY['HOLD'];
+            const ourLabel = activeStockData?.label || 'HOLD';
+            const v = VERDICT_DISPLAY[ourLabel] || VERDICT_DISPLAY['HOLD'];
             const quantRating = tickerDef.ratingOverride
               ? getInstitutionalRating(allProjections.base.pricePerShare, tickerDef.currentPrice)
               : null;
+            const modelDiffers = quantRating && quantRating.label !== ourLabel;
             return (
               <>
                 <div className={cn("text-6xl lg:text-7xl font-black tracking-tighter leading-none", v.color)}>
                   {v.text}
                 </div>
-                <div className={cn("text-[10px] font-black uppercase tracking-widest mt-1", v.subtextColor)}>
-                  {activeStockData?.label || 'HOLD'}
-                </div>
-                {quantRating && (
+                {/* Only show sub-label when it adds info (YES→BUY, NO→AVOID); skip when same as big text (HOLD→HOLD) */}
+                {v.text !== ourLabel && (
+                  <div className={cn("text-[10px] font-black uppercase tracking-widest mt-1", v.subtextColor)}>
+                    {ourLabel}
+                  </div>
+                )}
+                {/* Only show model rating when it disagrees with our assessment */}
+                {modelDiffers && (
                   <div className="text-[9px] font-medium text-slate-600 mt-1">
                     Model: <span className={quantRating.color}>{quantRating.label}</span>
                   </div>
