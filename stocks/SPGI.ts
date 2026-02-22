@@ -6,7 +6,7 @@ export const SPGI = defineStock({
   sector: 'Financial Data',
   themeColor: '#c5a44e',
   currentPrice: 417,
-  fairPriceRange: '$468 - $925',
+  fairPriceRange: '$470 - $1000',
   shares0: 298.8,
   rev25: 15340,
   fcfMargin25: 0.357,
@@ -19,8 +19,8 @@ export const SPGI = defineStock({
   unit25: 1.2,
   enhancementLabel: 'Strategic Value Overlay',
   rsRating: 16,
-  aiImpact: 'NEUTRAL',
-  strategicNarrative: "Structural compounder (Type A) with cash-machine profile (D). Oligopoly moat: credit ratings (regulatory embedded), S&P Indices (network effect via ETF/passive), high switching costs, pricing power (EBIT margin >50%). 2025A: Revenue $15.34B, EPS $14.66, FCF $5.48B (35% margin). Forward 2026E: Revenue $16.49B, EPS $19.65 (P/E ~21x). Recurring revenue ~75%+. Revenue CAGR ~7-9%, EPS CAGR ~10-12% (with ~1-2% from buybacks, ~1-2% from margin expansion). Moderate cyclicality via Ratings segment (issuance volume), offset by structural recurring in Indices + Data. RS 16 = weak relative strength, not a momentum story. Base expected return ~11-13%. Probability of 15%+: ~30-35%. Premium business, not cheap — quality at fair price.",
+  aiImpact: 'TAILWIND',
+  strategicNarrative: "Structural compounder (Type A) with cash-machine profile (D). Triple-layer moat: (1) regulatory embedded (ratings/indices), (2) workflow moat (CapIQ, ClearPar, iLEVEL, Platts as system-of-record — LLMs work on top, not replacing), (3) data control (LLMs can't train on S&P data without commercial terms). 95% revenue tied to proprietary benchmarks/differentiated data. 2025A: Revenue $15.34B (+8% organic), EPS $14.66 (+14%), FCF $5.48B (35% margin), $5B buybacks (113% FCF returned), 53rd consecutive dividend raise. 2026 guide: Revenue +6-8%, EPS $19.40-19.65 (+9-10%), margin +50-75bps. Segments: Indices +10-12%, MI +5.5-7%, Energy +5.5-7%, Ratings low-mid single digit issuance. AI = structural tailwind (not hype): EDO → 20% cost reduction by 2027, add-ons, cross-sell, retention. Mobility spin = hidden catalyst for re-rating. Revenue CAGR ~6-8%, EPS CAGR ~9-12% (margin +0.5-0.75% + buybacks 1-2%). RS 16 = no institutional momentum. Base expected CAGR ~11-13%. Probability of 15%+: ~35-40%. Premium quality compounder, not explosive growth.",
 
   revGrowth: [
     [0.04, 0.04, 0.04, 0.04, 0.04],
@@ -35,9 +35,9 @@ export const SPGI = defineStock({
   exitMultiple: [15, 19, 21],
   ebitdaProxy: [0.48, 0.52, 0.55],
   desc: [
-    'Credit cycle downturn + revenue growth halved to ~4%: EPS CAGR ~6%, EPS 2030 ~$26, exit P/E 18x. Target ~$468. CAGR ~2-3%.',
-    'Steady structural growth: revenue ~7-9%, EPS CAGR ~11%, EPS 2030 ~$33, exit P/E 22x. Target ~$726. CAGR ~11-12%.',
-    'Above-trend execution + index/data tailwinds: EPS CAGR ~14%, EPS 2030 ~$37, exit P/E 25x. Target ~$925. CAGR ~17%.',
+    'Credit cycle downturn + issuance slump: EPS CAGR ~6-7%, EPS 2030 ~$26-28, exit P/E 18x. Target ~$470-500. CAGR ~2-4%.',
+    'Disciplined structural growth per guidance: revenue +6-8%, EPS CAGR ~11%, EPS 2030 ~$33-35, exit P/E 22x. Target ~$730-770. CAGR ~11-12%.',
+    'AI margin uplift + index tailwinds + Mobility spin catalyst: EPS CAGR ~14-15%, EPS 2030 ~$37-40, exit P/E 25x. Target ~$950-1000. CAGR ~16-18%.',
   ],
 
   bullMaOptVal: 417 * 298.8 * 0.07,
