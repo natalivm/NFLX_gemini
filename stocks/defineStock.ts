@@ -46,9 +46,6 @@ export interface SimpleStockInput {
   // ── Display ──
   fairPriceRange?: string;
   active?: boolean;
-  unitLabel: string;
-  unit25: number;
-  enhancementLabel?: string;
   rsRating: number;
   aiImpact: 'TAILWIND' | 'DISRUPTION_RISK' | 'NEUTRAL';
   strategicNarrative: string;
@@ -144,8 +141,8 @@ export function defineStock(input: SimpleStockInput): StockDefinition {
     // Identity & financials
     ticker, name, sector, themeColor, currentPrice, shares0,
     rev25, fcfMargin25, taxRate, cash, debt, beta, costDebt,
-    fairPriceRange, active = true, unitLabel, unit25,
-    enhancementLabel, rsRating, aiImpact, strategicNarrative,
+    fairPriceRange, active = true,
+    rsRating, aiImpact, strategicNarrative,
     modelType = 'DCF_ADVANCED',
 
     // Scenarios
@@ -200,10 +197,7 @@ export function defineStock(input: SimpleStockInput): StockDefinition {
     debt,
     beta,
     costDebt,
-    unitLabel,
-    unit25,
     modelType,
-    enhancementLabel,
     rsRating,
     aiImpact,
     strategicNarrative,

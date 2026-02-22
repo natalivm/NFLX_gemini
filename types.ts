@@ -57,10 +57,7 @@ export interface TickerDefinition {
   rev25: number;
   fcfMargin25: number;
   taxRate: number;
-  unitLabel: string;
-  unit25: number;
   modelType: ValuationModelType;
-  enhancementLabel?: string;
   rsRating: number;
   aiImpact: 'TAILWIND' | 'DISRUPTION_RISK' | 'NEUTRAL';
   strategicNarrative: string;
@@ -82,7 +79,6 @@ export interface ProjectionData {
   shares: number[];
   eps: number[];
   price: number[];
-  priceEnhanced: number[];
   cagrs: number[];
   cumReturns: number[];
   fcfYield: number[];

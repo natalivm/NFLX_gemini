@@ -74,8 +74,6 @@ export const TICKER = defineStock({
   costDebt: 0.05,        // optional
 
   // Display
-  unitLabel: 'Revenue Per Share',
-  unit25: 10,
   rsRating: 75,          // IBD Relative Strength 1-99
   aiImpact: 'TAILWIND',  // 'TAILWIND' | 'DISRUPTION_RISK' | 'NEUTRAL'
   strategicNarrative: 'Why this stock matters...',
