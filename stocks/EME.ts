@@ -6,7 +6,7 @@ export const EME: StockDefinition = {
   sector: 'Facilities Services · Data Center Infrastructure',
   themeColor: '#22d3ee',
   currentPrice: 811.44,
-  fairPriceRange: '$500 - $1200',
+  fairPriceRange: '$560 - $1350',
   active: true,
   shares0: 44.7,
   rev25: 17200,             // Revenue 2025E ($M); Q3'25 +16.4% YoY
@@ -16,39 +16,42 @@ export const EME: StockDefinition = {
   debt: 800,
   beta: 1.08,
   costDebt: 0.052,
-  baseEps: 25.0,            // 2025E EPS guidance ~$25.0–25.75
+  baseEps: 25.4,            // 2025E EPS midpoint guidance ($25.0–25.75)
   unitLabel: 'RPO ($B)',
   unit25: 12.6,             // Record RPO $12.6B (+29% YoY), 80% DC-driven organic
   modelType: 'EPS_PE',
-  enhancementLabel: 'DC Buildout + M&A + Operational Leverage',
+  enhancementLabel: 'DC Buildout + Productivity Moat + M&A',
   rsRating: 93,
   aiImpact: 'TAILWIND',
   strategicNarrative:
-    "Type B cyclical growth industrial with strengthening structural tailwinds. " +
-    "Q3'25 confirmed operating margin 9.1–9.4% as new baseline (rolling 12–24mo view). " +
-    "RPO at record $12.6B (+29% YoY), 80% of RPO growth in data centers — organic, not M&A. " +
-    "Hyperscaler clients engaging directly, validating EME's positioning in AI DC buildout chain. " +
-    "Management guides organic growth at high single / low double digits — disciplined, not promotional. " +
-    "Capital allocation balanced: ~$430M buybacks + ~$900M M&A in 9M'25; UK exit (~$500M rev, ~$0.45 EPS) sharpens US focus. " +
-    "Operational moat via VDC/BIM/prefab productivity and field leadership, not pricing power. " +
-    "Electrical segment headwinds (intangible amort ~90bps + new-geo workforce investment) are controlled, R&D-like costs. " +
-    "Probability of 15%+ CAGR from current price: ~30–40%. " +
-    "Key risk: valuation compression + cycle normalization can erase 2–3 years of EPS growth even if execution continues.",
+    "B+ quality cyclical grower with semi-structural productivity moat. " +
+    "Data centers now ~24–25% of revenue and growing — not sectoral noise but a systemic factor for consolidated revenue/margin. " +
+    "Hyperscaler demand visibility extends to 2031 (gas turbines sold out until 2031); qualitative signal, not contracted, but materially lowers short-cycle cliff risk. " +
+    "Triple execution moat: (1) labor — union recruitment/redeployment via hall, lower workforce-stuck risk; " +
+    "(2) productivity — prefab/VDC/BIM investment, CapEx CAGR 28–30% vs revenue 14–15%, rev growth ~3x headcount growth; " +
+    "(3) customer intimacy — hyperscalers directly 'want us on the journey'. " +
+    "Margin sustainability backed by structural productivity, not just hot demand; operating margin 9.1–9.4% baseline confirmed. " +
+    "Downturn playbook clear: if DC falls 50% → ~-12.5% revenue; variable labor (union) + ROI focus + 3-year payback prefab = managed downside. " +
+    "RPO at record $12.6B (+29% YoY), 80% DC-driven organic. Capital allocation balanced: reinvestment (M&A + organic) vs shareholder returns ~50/50. " +
+    "Probability-weighted expected CAGR from current price: ~6–7% at most likely 24x exit P/E. " +
+    "Probability of 15%+ CAGR: ~35–45%, requires entry not at peak multiple or DC cycle continuation to 2031. " +
+    "Good company, not cheap entry. Entry for 15% CAGR needs ~$560–665 (base/bull). " +
+    "Key risk: valuation compression — even strong EPS growth yields mediocre CAGR if P/E compresses to 18x.",
   scenarios: {
     epsCagr: {
-      [ScenarioType.BEAR]: 7,       // 5–8% range midpoint
-      [ScenarioType.BASE]: 14,      // 12–14% range, upper end (post-call upgrade)
-      [ScenarioType.BULL]: 17,      // 16–18% range midpoint
+      [ScenarioType.BEAR]: 7,       // DC slows, margin compresses to ~8–8.5%
+      [ScenarioType.BASE]: 13,      // DC normalizes but holds, margin 9–9.4%, organic ~9–11%
+      [ScenarioType.BULL]: 17,      // DC continues high-teens, margin 9.5–10%+, M&A flawless
     },
     exitPE: {
-      [ScenarioType.BEAR]: 18,      // 16–20x range midpoint
-      [ScenarioType.BASE]: 24,      // 22–26x range midpoint
-      [ScenarioType.BULL]: 27,      // 25–28x range midpoint
+      [ScenarioType.BEAR]: 18,      // Market re-rates EME as ordinary industrial (25% weight)
+      [ScenarioType.BASE]: 24,      // Quality cyclical growth, not structural compounder (50% weight)
+      [ScenarioType.BULL]: 28,      // Market sustains premium for DC visibility + execution (25% weight)
     },
     prob: {
       [ScenarioType.BEAR]: 25,
-      [ScenarioType.BASE]: 40,
-      [ScenarioType.BULL]: 35,      // Higher bull weight post-call (RPO strength + DC visibility)
+      [ScenarioType.BASE]: 50,      // 24x most likely exit — quality cyclical, not compounder
+      [ScenarioType.BULL]: 25,      // 28x requires sustained DC cycle + risk-on market
     },
     revGrowth: {
       // Revenue growth for display/yield calculations
@@ -79,20 +82,21 @@ export const EME: StockDefinition = {
     },
     desc: {
       [ScenarioType.BEAR]:
-        'Cycle cools. DC capex wave decelerates, revenue growth drops to ~4–5% organic. ' +
-        'Operating leverage weakens, margin drifts toward 8%. P/E compresses from ~32x to 18x. ' +
-        'EPS CAGR 5–8%, 2030 EPS ~$35 × 18x = ~$630 target. CAGR ~-3% to flat. ' +
-        'Compression alone can erase 2–3 years of EPS growth.',
+        'DC slows (50% drop = ~-12.5% rev). Variable union labor absorbs some pain, but margin drifts to ~8–8.5%. ' +
+        'Market re-rates EME as ordinary industrial: 18x exit. ' +
+        'EPS CAGR ~7%, 2030E EPS ~$35.6 × 18x = ~$641. CAGR ~-4.7%. ' +
+        'Downside driven by multiple compression, not bankruptcy risk. Managed but painful.',
       [ScenarioType.BASE]:
-        'DC buildout continues at moderate pace. Organic growth high single / low double (per mgmt guide). ' +
-        'Operating margin holds 9.1–9.4% baseline. M&A adds incremental 2–3% rev. P/E contracts to 24x. ' +
-        'EPS CAGR 12–14%, 2030 EPS ~$48 × 24x = ~$1150 target. CAGR ~7–8%. ' +
-        'Solid execution but hurdle rate missed at current valuation.',
+        'DC normalizes but holds. Organic high-single / low-double. Margin in 9–9.4% band (productivity-backed, not just demand). ' +
+        'Capital allocation 50/50 reinvestment vs returns. 24x exit — quality cyclical, not compounder. ' +
+        'EPS CAGR ~13%, 2030E EPS ~$46.8 × 24x = ~$1,123. CAGR ~6.7%. ' +
+        'Good company, not cheap entry at current price. Entry ~$560 needed for 15% CAGR.',
       [ScenarioType.BULL]:
-        'AI DC supercycle extends 4–5 years. RPO stays elevated, organic growth sustains low double digits. ' +
-        'M&A execution flawless (no margin degradation). Margin expands toward 10%+. ' +
-        'EPS CAGR 16–18%, 2030 EPS ~$55 × 27x = ~$1480 target. CAGR ~13%. ' +
-        'Requires no cycle downturn + continued hyperscaler engagement + M&A discipline.',
+        'AI DC supercycle extends to 2031 (Baird visibility signal). Organic sustains low-double. ' +
+        'Productivity moat (prefab/VDC/BIM: rev growth 3x headcount) drives margin toward 10%+. ' +
+        'M&A flawless. Hyperscalers deepen partnership. 28x exit — market pays premium for execution + visibility. ' +
+        'EPS CAGR ~17%, 2030E EPS ~$55.7 × 28x = ~$1,560. CAGR ~13.9%. ' +
+        'Even bull at 24x exit gives only ~10.4%. 15%+ needs entry ~$665 or sustained 28x.',
     },
     drivers: {
       [ScenarioType.BEAR]: {
@@ -110,8 +114,8 @@ export const EME: StockDefinition = {
       [ScenarioType.BULL]: {
         revPrem: [0.01, 0.01, 0.01, 0.01, 0.01],
         fcfUplift: [0.005, 0.005, 0.005, 0.005, 0.005],
-        bbRate: 0.015,          // Higher buybacks from stronger FCF
-        ebitdaProxy: 0.12,      // Margin expansion toward 10%+ op margin
+        bbRate: 0.015,          // Not core driver — balanced 50/50 reinvest vs returns
+        ebitdaProxy: 0.12,      // Margin toward 10%+, productivity-backed (prefab/VDC/BIM)
         maOptVal: 811.44 * 44.7 * 0.04,  // M&A optionality (~$1.45B)
       },
     },
