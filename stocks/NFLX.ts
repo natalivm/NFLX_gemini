@@ -65,9 +65,9 @@ export const NFLX = defineStock({
   // Probability-weighted expected return: (0.30×20.6%) + (0.45×13%) + (0.25×1%) = 12.3%
   // Expected 5yr price: (0.30×200) + (0.45×145) + (0.25×83) = $146
   baseEps: 3.13,
-  epsCagr: [0.08, 0.15, 0.18],
+  epsCagr: [8, 15, 18],
   exitPE: [18, 23, 28],
-  prob: [0.25, 0.45, 0.30],
+  prob: [25, 45, 30],
 
   // M&A optionality: WB/HBO transaction pending but no deal parameters available.
   // Standalone valuation is base; M&A case kept as separate layer.

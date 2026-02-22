@@ -22,6 +22,7 @@ export const PAAS = defineStock({
   rsRating: 97,
   rsTrend: 'rising',
   aiImpact: 'NEUTRAL',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "Type B — Cyclical Growth. Not a compounder. This is a leveraged bet on silver and gold prices. " +
     "Post earnings call: record FCF $1.2B (Q4 alone $553M), but CEO states explicitly — record results reflect leverage to metal prices, " +

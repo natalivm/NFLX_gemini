@@ -19,6 +19,7 @@ export const ASML = defineStock({
   baseEps: 45.21,
   rsRating: 96,
   aiImpact: 'TAILWIND',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "Post FY25 earnings call: Type B+ cyclical growth — structural trend dominates, but delivery/FCF are cyclical. " +
     "FY25 actuals: net sales €32.7B, GM 52.8%, FCF €11B (Q4 alone €10.9B — lumpy cash-in), EPS €24.73. " +

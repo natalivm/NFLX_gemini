@@ -19,6 +19,7 @@ export const KKR = defineStock({
   modelType: 'EPS_PE',
   rsRating: 16,
   aiImpact: 'TAILWIND',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "Category B — cyclical growth with structural trend elements. " +
     "KKR is an alternative asset manager: management fees stable, performance fees/carry deeply cyclical. " +

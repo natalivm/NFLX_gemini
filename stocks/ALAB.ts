@@ -18,6 +18,7 @@ export const ALAB = defineStock({
   rsRating: 60,
   rsTrend: 'flat',
   aiImpact: 'TAILWIND',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "Type B (cyclical AI growth) → potential A if scale-up switching layer consolidates. " +
     "Post-earnings update: $6.5B Amazon warrant = strategic hyperscaler lock-in, not just a design win. " +

@@ -19,6 +19,7 @@ export const WWD = defineStock({
   baseEps: 8.4,         // FY26 mid-guide EPS
   rsRating: 95,
   aiImpact: 'TAILWIND',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "Post FY26 Q1 — monster quarter: +29% YoY revenue, 23.4% aero segment margin (+420 bps), " +
     "industrial margin +410 bps. FY26 guidance raised: 14–18% sales growth, EPS $8.20–$8.60 (mid $8.40), " +

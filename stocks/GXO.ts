@@ -19,6 +19,7 @@ export const GXO = defineStock({
   baseEps: 3.00,
   rsRating: 91,
   aiImpact: 'TAILWIND',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "Post Q4'25 call (Feb 11 2026): Type B cyclical growth with execution-driven margin upside, not a structural compounder. " +
     "FY25 actuals: Rev $13.2B (+12.5%, +3.9% organic), Adj EBITDA $881M (+8%), Adj EPS $2.51. " +
