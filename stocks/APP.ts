@@ -17,6 +17,7 @@ export const APP = defineStock({
   costDebt: 0.05,
   modelType: 'EPS_PE',
   baseEps: 9.75,
+  // RS 19 (3-mo RS 4, 6-mo RS 7) — off 47% from 52-wk high, Acc/Dis D-, heavy institutional distribution
   rsRating: 19,
   rsTrend: 'falling',
   aiImpact: 'TAILWIND',
