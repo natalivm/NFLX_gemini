@@ -17,6 +17,7 @@ export const CLS = defineStock({
   costDebt: 0.05,
   rsRating: 94,
   aiImpact: 'TAILWIND',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "Celestica is a top-tier EMS play on AI infrastructure — 800G/1.6T rack-level solutions for hyperscalers, FY25 adj EPS +56%, FCF $458M. " +
     "The problem: at 47x trailing P/E for an EMS manufacturer, the stock prices in near-perfection while a 5x CapEx jump to $1B in FY26 and 63% top-3 client concentration create real fragility. " +

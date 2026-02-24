@@ -19,6 +19,7 @@ export const CAVA = defineStock({
   baseEps: 0.53,
   rsRating: 57,
   aiImpact: 'NEUTRAL',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "CAVA is a unit-expansion growth story in fast-casual — 415 restaurants scaling as the 'Mediterranean Chipotle' with high AUV and strong new-unit productivity. " +
     "The problem: at ~130x forward P/E, the stock prices in near-perfect execution while SSS is softening (+1.9%, traffic flat) and the moat is operational, not structural. " +
