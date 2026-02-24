@@ -54,7 +54,7 @@ const ScenarioMetricsCard: React.FC<Props> = ({ data, currentPrice, modelType })
             </div>
             <div className="flex flex-col">
               <span className="text-xs text-slate-400 uppercase font-black tracking-widest">Terminal g:</span>
-              <span className="text-base font-black text-slate-300">{pctFmt(config.termGrowth!)}</span>
+              <span className="text-base font-black text-slate-300">{pctFmt(config.termGrowth ?? 0)}</span>
             </div>
           </>
         )}

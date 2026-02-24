@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { Info, LayoutDashboard } from 'lucide-react';
 import { TickerDefinition, ProjectionData, ScenarioType } from '../types';
 import { computeStockMetrics, usd, pctFmt } from '../services/stockMetrics';
+import { AI_IMPACT_BADGE } from '../constants';
 import ScenarioMetricsCard from './ScenarioMetricsCard';
 import StockPageHeader from './StockPageHeader';
 import StockMetricCards from './StockMetricCards';
@@ -104,7 +105,7 @@ const StockDetailView: React.FC<Props> = ({
                     <span className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">AI Context</span>
                     <div className={cn(
                       "text-xs font-black px-2 py-1 rounded border inline-block text-center whitespace-nowrap",
-                      tickerDef.aiImpact === 'TAILWIND' ? 'border-emerald-500 text-emerald-400 bg-emerald-500/10' : 'border-amber-500 text-amber-400 bg-amber-500/10'
+                      AI_IMPACT_BADGE[tickerDef.aiImpact]
                     )}>
                       {tickerDef.aiImpact.replace('_', ' ')}
                     </div>

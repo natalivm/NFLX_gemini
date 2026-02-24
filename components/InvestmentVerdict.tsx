@@ -3,14 +3,8 @@ import { motion } from 'motion/react';
 import { TickerDefinition, ProjectionData, ScenarioType } from '../types';
 import { StockMetrics, usd, pctFmt } from '../services/stockMetrics';
 import { getInstitutionalRating } from '../services/projectionService';
+import { RATING_DEFS, RatingKey } from '../constants';
 import { cn } from '../utils';
-
-const VERDICT_DISPLAY: Record<string, { text: string; color: string; subtextColor: string }> = {
-  'STRONG BUY': { text: 'YES', color: 'text-green-400', subtextColor: 'text-green-500/70' },
-  'BUY':        { text: 'YES', color: 'text-emerald-400', subtextColor: 'text-emerald-500/70' },
-  'AVOID':      { text: 'NO',  color: 'text-red-400', subtextColor: 'text-red-500/70' },
-  'HOLD':       { text: 'HOLD', color: 'text-blue-400', subtextColor: 'text-blue-500/70' },
-};
 
 interface Props {
   tickerDef: TickerDefinition;
@@ -152,7 +146,8 @@ const InvestmentVerdict: React.FC<Props> = ({
           <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Is it a Buy?</span>
           {(() => {
             const ourLabel = activeStockData?.label || 'HOLD';
-            const v = VERDICT_DISPLAY[ourLabel] || VERDICT_DISPLAY['HOLD'];
+            const rd = RATING_DEFS[ourLabel as RatingKey] || RATING_DEFS['HOLD'];
+            const v = { text: rd.verdictText, color: rd.color, subtextColor: rd.subtextColor };
             const quantRating = tickerDef.ratingOverride
               ? getInstitutionalRating(allProjections.base.pricePerShare, tickerDef.currentPrice)
               : null;

@@ -5,7 +5,7 @@ export const CAVA = defineStock({
   name: 'CAVA Group, Inc.',
   sector: 'Restaurants · Fast-Casual · Mediterranean',
   themeColor: '#c8553d',
-  currentPrice: 69.90,
+  currentPrice: 68.44,
   fairPriceRange: '$25 - $128',
   shares0: 116,
   rev25: 1421,
@@ -19,6 +19,7 @@ export const CAVA = defineStock({
   baseEps: 0.53,
   rsRating: 57,
   aiImpact: 'NEUTRAL',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "CAVA is a unit-expansion growth story in fast-casual — 415 restaurants scaling as the 'Mediterranean Chipotle' with high AUV and strong new-unit productivity. " +
     "The problem: at ~130x forward P/E, the stock prices in near-perfect execution while SSS is softening (+1.9%, traffic flat) and the moat is operational, not structural. " +
