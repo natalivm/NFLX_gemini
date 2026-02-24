@@ -49,9 +49,15 @@ export const BKNG = defineStock({
   exitMultiple: [12, 16, 18],
 
   desc: [
-    'Travel macro recession + discretionary pullback. Revenue 4-5%, margins stable ~34%, reduced buybacks. DCF fair value ~$4,500. CAGR ~2%.',
-    'Algo execution: 9% CC top line, +50 bps FCF margin/yr, ~4% net share reduction. FCF CAGR ~10%. DCF fair value ~$7,700. CAGR ~14%.',
-    'Above-algo growth, margin expansion to 39% FCF, ~5% net share reduction. FCF CAGR ~13%. DCF fair value ~$10,300. CAGR ~21%.',
+    'Travel macro recession forces discretionary pullback — "thoughtful spending" translates to real demand compression across EU and US leisure segments. Revenue growth decelerates to 4-5% as room night growth stalls. ' +
+      'EU regulatory pressure on OTA commissions plus early LLM-driven disintermediation erode take rate at the margins. FCF margins hold at ~33-34% on Transformation Program savings but cycle pressure caps expansion. ' +
+      'Reduced buybacks (~2% net share reduction) limit per-share compounding. Market re-rates to 12x EV/EBITDA as cyclical trough multiple. DCF fair value ~$4,500 — roughly flat from current levels.',
+    'Company executes on Q4\'25 algo targets: ~9% constant-currency top line (8% algo + 100 bps), mid-teens EPS growth, +50 bps annual FCF margin expansion — self-funded by $550M Transformation Program run-rate savings. ' +
+      'Capital return stays disciplined: ~90% of FCF returned via buybacks, driving ~4% annual net share reduction. FCF margins expand from 34% to 36% over five years on merchant mix shift and payment processing scale. ' +
+      'P/E stays compressed at ~16x (vs. 16-30x historical range) but FCF compounds at ~10% CAGR. DCF fair value ~$7,700 — upside driven by earnings growth and share count reduction, not multiple expansion.',
+    'Travel cycle extends beyond expectations — connected trip and GenAI-powered personalization drive above-algo room night growth. Merchant-of-record mix shift plus payments integration expand take rate and FCF margins to 39% by Year 5. ' +
+      'Aggressive capital return (~5% net share reduction) accelerates per-share value creation. LLM integration becomes a paid traffic channel (like Google was) rather than a disintermediation threat — Booking\'s supply depth, regulatory compliance, and payment infrastructure form an insurmountable bottom-of-funnel moat. ' +
+      'P/E normalizes from 16x toward 18x as market recognizes the structural compounder. DCF fair value ~$10,300.',
   ],
 
   thesis: [
