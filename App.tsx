@@ -2,190 +2,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { ScenarioType, TickerDefinition } from './types';
 import { calculateProjection, getInstitutionalRating } from './services/projectionService';
-import { TICKERS } from './constants';
+import { TICKERS, TAG_DEFS, GROUP_ORDER, GROUP_META, StockGroup, SPLASH_DURATION_MS, weightedScenarioAverage } from './constants';
+import { classifyStock, cn } from './utils';
 import StockDetailView from './components/StockDetailView';
+import LoadingSplash from './components/LoadingSplash';
+import TagFilterBar from './components/TagFilterBar';
+import StockRow from './components/StockRow';
 
 import { motion, AnimatePresence } from 'motion/react';
-import { cn, rsRatingStyle } from './utils';
-
-// ── Types & Constants ──
-
-type StockGroup = 'PRIME_GROWTH' | 'TURBO_GROWTH' | 'WATCH_LIST' | 'GRAVEYARD';
-
-const GROUP_ORDER: StockGroup[] = ['PRIME_GROWTH', 'TURBO_GROWTH', 'WATCH_LIST', 'GRAVEYARD'];
-
-const GROUP_META: Record<StockGroup, { label: string; accent: string; border: string; bg: string; desc: string }> = {
-  PRIME_GROWTH: {
-    label: 'PRIME GROWTH',
-    accent: 'text-emerald-400',
-    border: 'border-emerald-500/40',
-    bg: 'bg-emerald-500/5',
-    desc: 'Large Cap \u00b7 Strong Valuation \u00b7 High or Rising Momentum',
-  },
-  TURBO_GROWTH: {
-    label: 'TURBO GROWTH',
-    accent: 'text-fuchsia-400',
-    border: 'border-fuchsia-500/40',
-    bg: 'bg-fuchsia-500/5',
-    desc: 'Growth Cap \u00b7 Compelling Value \u00b7 High or Rising RS',
-  },
-  WATCH_LIST: {
-    label: 'WATCH LIST',
-    accent: 'text-slate-400',
-    border: 'border-slate-600/40',
-    bg: 'bg-slate-500/5',
-    desc: 'Monitoring \u00b7 Criteria Not Met',
-  },
-  GRAVEYARD: {
-    label: '\u2620 GRAVEYARD',
-    accent: 'text-red-800',
-    border: 'border-red-900/40',
-    bg: 'bg-red-950/10',
-    desc: 'Avoid \u00b7 Low Momentum \u00b7 Unfavorable Risk/Reward',
-  },
-};
-
-const TAG_DEFS = [
-  { tag: 'STRONG BUY', label: 'STRONG BUY', color: 'text-green-400',   activeBorder: 'border-green-500',   activeBg: 'bg-green-500/10',   dot: 'bg-green-500'   },
-  { tag: 'BUY',        label: 'BUY',         color: 'text-emerald-400', activeBorder: 'border-emerald-400', activeBg: 'bg-emerald-400/10', dot: 'bg-emerald-400' },
-  { tag: 'HOLD',       label: 'HOLD',        color: 'text-blue-400',    activeBorder: 'border-blue-500',    activeBg: 'bg-blue-500/10',    dot: 'bg-blue-500'    },
-  { tag: 'AVOID',      label: 'AVOID',       color: 'text-red-400',     activeBorder: 'border-red-500',     activeBg: 'bg-red-500/10',     dot: 'bg-red-500'     },
-  { tag: 'TAILWIND',         label: 'AI TAILWIND', color: 'text-emerald-400', activeBorder: 'border-emerald-500', activeBg: 'bg-emerald-500/10', dot: 'bg-emerald-500' },
-  { tag: 'DISRUPTION_RISK',  label: 'AI RISK',     color: 'text-orange-400',  activeBorder: 'border-orange-500',  activeBg: 'bg-orange-500/10',  dot: 'bg-orange-500'  },
-] as const;
-
-const SPLASH_DURATION_MS = 3000;
-
-// ── Helpers ──
-
-function classifyStock(t: TickerDefinition, rating: string, rsRating: number): StockGroup {
-  const marketCapM = t.currentPrice * t.shares0;
-  const isLargeCap = marketCapM >= 10_000;
-  const isBuyOrAbove = rating === 'STRONG BUY' || rating === 'BUY';
-  const hasGoodMomentum = rsRating >= 70;
-  const hasMidRsRising = rsRating >= 40 && t.rsTrend === 'rising';
-
-  // Graveyard: AVOID rating with low relative strength
-  if (rating === 'AVOID' && rsRating < 40) return 'GRAVEYARD';
-
-  if (isLargeCap && isBuyOrAbove && (hasGoodMomentum || hasMidRsRising)) return 'PRIME_GROWTH';
-  if (!isLargeCap && isBuyOrAbove && (hasGoodMomentum || hasMidRsRising)) return 'TURBO_GROWTH';
-  return 'WATCH_LIST';
-}
-
-// ── Extracted Components ──
-
-const LoadingSplash: React.FC = () => (
-  <motion.div
-    key="loader"
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.15 }}
-    className="min-h-screen bg-surface-deep flex flex-col items-center justify-center p-12 lg:p-24 overflow-hidden"
-  >
-    <div className="absolute inset-0 opacity-10 pointer-events-none">
-      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#ff007f_0%,transparent_60%)]"></div>
-    </div>
-    <div className="z-10 w-full text-center text-7xl lg:text-9xl font-black text-[#ff007f] tracking-tighter leading-[0.8] animate-pulse uppercase">
-      IS IT<br />A<br />BUY?
-    </div>
-  </motion.div>
-);
-
-const TagFilterBar: React.FC<{
-  activeTagFilter: string | null;
-  tagCounts: Record<string, number>;
-  onToggle: (tag: string | null) => void;
-}> = ({ activeTagFilter, tagCounts, onToggle }) => (
-  <div className="flex flex-wrap gap-2 mb-6 pt-1">
-    {TAG_DEFS.map(({ tag, label, color, activeBorder, activeBg, dot }) => {
-      const count = tagCounts[tag];
-      const isActive = activeTagFilter === tag;
-      return (
-        <button
-          key={tag}
-          onClick={() => onToggle(isActive ? null : tag)}
-          className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-black uppercase tracking-widest transition-all duration-200",
-            isActive
-              ? `${activeBorder} ${activeBg} ${color}`
-              : "border-slate-700/60 text-slate-400 hover:border-slate-500 hover:text-slate-300"
-          )}
-        >
-          <span className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", isActive ? dot : 'bg-slate-600')}></span>
-          {label}
-          <span className={cn(
-            "font-mono text-[11px] px-1.5 py-0.5 rounded",
-            isActive ? `${activeBg} ${color}` : 'bg-slate-800 text-slate-400'
-          )}>
-            {count}
-          </span>
-        </button>
-      );
-    })}
-    {activeTagFilter && (
-      <button
-        onClick={() => onToggle(null)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-700/60 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-slate-300 hover:border-slate-500 transition-all duration-200"
-      >
-        <span className="text-xs">&#x2715;</span> CLEAR
-      </button>
-    )}
-  </div>
-);
-
-interface StockRowData {
-  ticker: string;
-  fairPriceRange: string;
-  label: string;
-  color: string;
-  dot: string;
-  aiImpact: string;
-  group: StockGroup;
-}
-
-const StockRow: React.FC<{
-  stock: StockRowData;
-  tickerDef: TickerDefinition;
-  animationIndex: number;
-  onSelect: (ticker: string) => void;
-}> = ({ stock, tickerDef, animationIndex, onSelect }) => {
-  const isGraveyard = stock.group === 'GRAVEYARD';
-  return (
-    <motion.button
-      key={stock.ticker}
-      layout
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: animationIndex * 0.02 }}
-      onClick={() => onSelect(stock.ticker)}
-      className={cn(
-        "w-full flex items-center gap-4 py-4 px-4 group transition-all duration-300 border-b border-slate-800/50 hover:bg-white/5 text-left",
-        isGraveyard && "opacity-60"
-      )}
-    >
-      <div className={cn("w-3 h-3 rounded-full flex-shrink-0", stock.dot)}></div>
-      <span className={cn(
-        "text-2xl lg:text-3xl font-black transition-colors tracking-tighter flex-shrink-0 flex items-center gap-1",
-        isGraveyard
-          ? "text-slate-600 group-hover:text-slate-500 w-32"
-          : "text-white group-hover:text-[#ff007f] w-28"
-      )}>
-        {isGraveyard && <span className="hidden group-hover:inline text-xl">{'\u2620'}</span>}
-        {stock.ticker}
-      </span>
-      <span className={cn("text-base font-bold mono w-24 flex-shrink-0", isGraveyard ? "text-blue-400/40" : "text-blue-400")}>${tickerDef.currentPrice.toFixed(2)}</span>
-      <div className="flex flex-col w-28 flex-shrink-0">
-        <span className={cn("text-xs font-black uppercase tracking-widest", stock.color)}>{stock.label}</span>
-      </div>
-      <span className={cn(
-        "text-sm font-bold mono border rounded px-1.5 py-0.5 flex-shrink-0",
-        rsRatingStyle(tickerDef.rsRating)
-      )}>RS {tickerDef.rsRating}</span>
-      <span className={cn("text-sm font-bold mono", isGraveyard ? "text-slate-300/40" : "text-slate-300")}>{stock.fairPriceRange}</span>
-      <span className={cn("text-sm font-medium truncate", isGraveyard ? "text-slate-400/40" : "text-slate-400")}>{tickerDef.sector.split(/\s[·\/]\s/)[0]}</span>
-    </motion.button>
-  );
-};
 
 // ── Main App ──
 
@@ -248,12 +72,11 @@ const App: React.FC = () => {
 
   const investmentConclusion = useMemo(() => {
     if (!allProjections || !tickerDef) return null;
-    const targets = [
+    const pwAvg = weightedScenarioAverage(
       allProjections.bear.pricePerShare,
       allProjections.base.pricePerShare,
-      allProjections.bull.pricePerShare
-    ];
-    const pwAvg = (targets[0] * 0.25) + (targets[1] * 0.50) + (targets[2] * 0.25);
+      allProjections.bull.pricePerShare,
+    );
     const cagr = (Math.pow(pwAvg / tickerDef.currentPrice, 1 / 5) - 1) * 100;
     return { pwAvg, cagr };
   }, [allProjections, tickerDef]);

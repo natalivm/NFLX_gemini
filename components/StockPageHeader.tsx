@@ -10,7 +10,6 @@ interface Props {
   currentProjection: ProjectionData;
   activeStockData: { label: string; color?: string } | undefined;
   onBack: () => void;
-  modelLabel?: string;
   children?: React.ReactNode;
 }
 
@@ -19,7 +18,6 @@ const StockPageHeader: React.FC<Props> = ({
   currentProjection,
   activeStockData,
   onBack,
-  modelLabel,
   children,
 }) => {
   const tc = tickerDef.themeColor;
@@ -39,7 +37,7 @@ const StockPageHeader: React.FC<Props> = ({
       <header className="mb-12 border-b-2 pb-8" style={{ borderColor: tc }}>
         <div className="text-xs font-black text-amber-500 uppercase tracking-[0.4em] mb-4 flex items-center gap-3">
           <span className="w-12 h-[2px] bg-amber-500/50" />
-          {tickerDef.name.toUpperCase()} {modelLabel || tickerDef.modelType.replace('_', ' ')}
+          {tickerDef.name.toUpperCase()} {tickerDef.modelType.replace('_', ' ')}
         </div>
 
         <div className="flex items-center justify-between flex-wrap gap-6">
