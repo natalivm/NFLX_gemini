@@ -10,7 +10,7 @@ export const FLEX = defineStock({
   shares0: 356,
   rev25: 25800,
   fcfMargin25: 0.04,
-  taxRate: 0.19,
+  taxRate: 0.21,
   cash: 2250,
   debt: 3000,
   beta: 1.24,
@@ -24,8 +24,8 @@ export const FLEX = defineStock({
   strategicNarrative:
     "Flex is a top-5 global EMS player riding AI server and EV content tailwinds, but the underlying story is more complex than headline EPS suggests. " +
     "FY2025 EPS of $2.65 grew at ~24% CAGR from $1.43, yet revenue declined from $30.3B to $25.8B — ~80% of EPS growth came from margin expansion and aggressive buybacks, not organic business growth. " +
-    "This is a fragile construction: pretax margins at 4.53% are already thin for EMS, and further expansion has a natural ceiling. " +
-    "Forward EPS of $3.25 (+23%) is achievable if revenue recovers to ~$27.4B, but guidance calls for only ~6% revenue growth — not structural acceleration. " +
+    "This is a fragile construction, though Q3 FY26 shows adjusted operating margin at 6.5% (record) — management cites power mix and industrial improvement with further expansion expected. " +
+    "FY26 guidance raised to $27.2-27.5B revenue and $3.21-3.27 EPS. Embedded power (800V DC) has very few competitors — a potential narrow moat. " +
     "RS Rating 86 looks strong on the surface, but 3-month RS of 38 signals broken momentum — institutional accumulation has stalled. " +
     "The thesis depends on cyclical recovery (inventory restocking + AI server buildout) rather than durable competitive advantage. " +
     "Stress-test: in recession, P/E compression to 11-12x yields $29-32 — a potential -55% drawdown. " +
@@ -52,10 +52,10 @@ export const FLEX = defineStock({
   desc: [
     'Cyclical downturn persists, revenue stays flat. EPS growth slows to ~6% as margin expansion exhausts. P/E compresses to 13x as market reprices EMS at historical trough multiples.',
     'Moderate revenue recovery to ~$30B by FY2030. Buybacks continue at current pace. Earnings compound at ~13% on margin stability and share count reduction. P/E holds at 18x.',
-    'AI server buildout + EV content ramp drive revenue recovery to $32B+. Margin expansion to 6% pretax on higher-mix business. Premium 22x multiple reflects structural AI supply chain positioning.',
+    'AI server buildout + EV content ramp drive revenue recovery to $32B+. Margin expansion continues beyond 6.5% on embedded power leadership and high-mix shift. Premium 22x multiple reflects structural AI supply chain positioning.',
   ],
 
   termGrowth: [0.015, 0.02, 0.025],
   bbRate: [0.01, 0.025, 0.035],
-  ebitdaProxy: [0.05, 0.07, 0.09],
+  ebitdaProxy: [0.07, 0.09, 0.11],
 });
