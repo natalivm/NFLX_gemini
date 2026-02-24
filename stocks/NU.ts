@@ -39,6 +39,8 @@ export const NU = defineStock({
   // ─────────────────────────────────────────────────────────────────────────
   strategicNarrative: "Type B → trending A: Cyclical growth compounder with deepening structural AI edge. Q3 2025 call materially reinforces the thesis. Operational: 127M customers (83%+ active), revenue >$4B (record), net income $783M, ROE 31% (record), cost-to-income 27.7-28%, credit book $30.4B (+42% YoY FX-neutral). Credit quality: risk-adjusted NIM expanded 9.2% → 9.9%, 15-90 NPL 4.2%, coverage robust. Key structural upgrade: nuFormer AI credit model (330M params, 600B tokens trained, 3x vs prior ML) — not yet applied to acquisition, lending, Mexico, or Colombia. Improvement runway is still early. Mexico second S-curve: 13M customers, ARPAC $12.5 (near Brazil levels), 80% revolvers, LDR only 15%, cost-to-serve ~$1. CEO confirmed Mexico is profitable but choosing to reinvest — intentional, not struggling. Revenue CAGR 3yr ~50%; EBIT margin 19% (2023) → 24% (2024) → 29% (2026E). EPS: $0.40 (2024A) → $0.59 (2025E) → $0.84 (2026E) → $1.11 (2027E) → ~$2.00 (2030E base). Forward P/E 2026 ~19x, 2027 ~14-15x — multiple de-risks each year. This is not hype or financial engineering: pure revenue growth + operational leverage + AI-enhanced underwriting. Probability of 15%+ CAGR (5yr): ~70%. Risks: Brazil macro, SELIC, credit cycle turn, Mexico interchange cap regulation, AI rollout execution.",
 
+
+  analystConsensus: { rating: 'Strong Buy', targetLow: 16, targetMedian: 19, targetHigh: 22, numAnalysts: 9 },
   revGrowth: [
     [0.22, 0.17, 0.13, 0.10, 0.08],  // Bear: credit stress + regulation hit
     [0.32, 0.26, 0.20, 0.15, 0.12],  // Base: consensus deceleration curve
