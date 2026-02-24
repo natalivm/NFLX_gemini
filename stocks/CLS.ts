@@ -6,7 +6,7 @@ export const CLS = defineStock({
   sector: 'EMS',
   themeColor: '#f97316',
   currentPrice: 293,
-  fairPriceRange: '$150 - $180',
+  fairPriceRange: '$120 - $360',
   shares0: 117.9,
   rev25: 12400,
   fcfMargin25: 0.037,
@@ -15,15 +15,21 @@ export const CLS = defineStock({
   debt: 724,
   beta: 1.35,
   costDebt: 0.05,
+  modelType: 'EPS_PE',
+  baseEps: 7.16,
   rsRating: 94,
   aiImpact: 'TAILWIND',
   ratingOverride: 'HOLD',
   strategicNarrative:
-    "Celestica is a top-tier EMS play on AI infrastructure — 800G/1.6T rack-level solutions for hyperscalers, FY25 adj EPS +56%, FCF $458M. " +
-    "The problem: at 47x trailing P/E for an EMS manufacturer, the stock prices in near-perfection while a 5x CapEx jump to $1B in FY26 and 63% top-3 client concentration create real fragility. " +
-    "If the AI infrastructure supercycle extends and margins normalize post-CapEx, this re-rates as a structural AI beneficiary. If CapEx cycle moderates, EMS multiples revert to 10-15x. " +
-    "RS 94 confirms momentum, but the risk/reward is asymmetric to the downside at current levels.",
+    "Celestica is a top-tier EMS play on AI infrastructure — 800G/1.6T rack-level solutions for hyperscalers, FY25 adj EPS $7.16 (+56%), guiding $8.75 for FY26 (+22%). " +
+    "Unprecedented demand visibility into 2027-28 with 1.6T switching platform win at a third hyperscaler. " +
+    "The tension: $1B CapEx in FY26 temporarily depresses FCF while earnings power accelerates — DCF undervalues this profile, so we use EPS × P/E. " +
+    "At ~41x trailing P/E, the stock prices in strong execution; risk is 63% top-3 client concentration and CapEx cycle duration. " +
+    "RS 94 confirms momentum. Risk/reward is balanced — upside if AI supercycle extends, but multiple compression risk if growth decelerates.",
 
+  epsCagr: [10, 18, 24],
+  exitPE: [14, 22, 26],
+  prob: [25, 50, 25],
 
   analystConsensus: { rating: 'Strong Buy', targetLow: 330, targetMedian: 387, targetHigh: 440, numAnalysts: 8 },
   revGrowth: [
@@ -38,19 +44,12 @@ export const CLS = defineStock({
   ],
   exitMultiple: [12, 16, 20],
   desc: [
-    'AI CapEx cycle moderates, revenue growth decelerates sharply. CapEx burden compresses FCF. P/E reverts to historical EMS range of 10–15x.',
-    'Solid execution on FY26 guide. Growth normalizes post-2027 as AI buildout matures. Margins improve as CapEx plateaus but P/E compression limits returns.',
-    'Sustained AI infrastructure super-cycle drives above-guide growth. Margins expand as CapEx normalizes. Premium multiple held on structural AI leadership.',
+    'AI CapEx cycle moderates, revenue growth decelerates sharply. EPS growth slows to ~10% as margins plateau. P/E compresses to 14x as market reprices EMS at historical range.',
+    'Solid execution on FY26 guide ($8.75 EPS). Earnings compound at ~18% as AI buildout sustains through 2028. Moderate P/E compression to 22x reflects mature growth phase.',
+    'Sustained AI infrastructure super-cycle drives 24% EPS CAGR. 1.6T platform ramp and third hyperscaler win extend growth runway. Premium 26x multiple held on structural AI leadership.',
   ],
 
   termGrowth: [0.02, 0.025, 0.03],
   bbRate: [0.005, 0.01, 0.015],
   ebitdaProxy: [0.08, 0.10, 0.13],
-  bullMaOptVal: 294.85 * 117.9 * 0.04,
-
-  driverOverrides: [
-    {},
-    { fcfUplift: [0.003, 0.005, 0.005, 0.005, 0.005] },
-    { fcfUplift: [0.005, 0.01, 0.01, 0.015, 0.015] },
-  ],
 });

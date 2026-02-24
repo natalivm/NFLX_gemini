@@ -6,20 +6,32 @@ export const CEG = defineStock({
   sector: 'Power',
   themeColor: '#3b82f6',
   currentPrice: 293,
-  fairPriceRange: '$240 - $510',
+  fairPriceRange: '$200 - $540',
   shares0: 358,
   rev25: 25200,
-  fcfMargin25: 0.123,
+  fcfMargin25: 0.051,
   taxRate: 0.255,
   cash: 4500,
   debt: 19900,
   beta: 1.83,
   costDebt: 0.0525,
+  modelType: 'EPS_PE',
+  baseEps: 9.39,
   rsRating: 22,
   aiImpact: 'TAILWIND',
   ratingOverride: 'BUY',
-  strategicNarrative: "Post-Nov 7 earnings: thesis upgraded from 'Cyclical Generator' to 'Cyclical Growth with rising structural visibility.' Three self-help MW levers — 850 MW of uprates (Byron/Braidwood 2026, LaSalle/Limerick/Calvert Cliffs 2027–28), 1,635 MW of restarts (Crane 2028–29, TMI 2029+), and ~1,000 MW ELCC demand response scaling — materially reduce reliance on merchant power prices. Base EPS CAGR upgraded to 10–12% (was 8–10%); P(15%+ CAGR) raised to 40–45% from 30–35%. Calpine acquisition (Q4 close, DOJ pending) adds coast-to-coast gas/power diversification; February 2026 combined guidance is the next catalyst. Nuclear capacity factor 96.8%. Execution slippage (hyperscaler PPA delays, uprate timelines, Calpine integration) is now the primary near-term risk. Entry matters: conviction size below $260, starter $260–295. RS 22 — tape not yet confirming.",
+  strategicNarrative:
+    "Q4/FY25 earnings confirmed: adj operating EPS $9.39 (+8.3% YoY), matching consensus. Nuclear capacity factor 96.8%. " +
+    "But real FCF is only $1.29B (OCF $4.24B − CapEx $2.95B) → 1.2% FCF yield at $105B market cap — very thin for a power business. " +
+    "Switched to EPS × P/E model since heavy CapEx (uprates, restarts, Calpine integration) temporarily depresses FCF while earnings power is clear. " +
+    "Calpine acquisition now closed — 2026 is first full combined year. Data center strategy real: CyrusOne 760 MW, Microsoft Crane 20-yr PPA + $1B DOE loan guarantee. " +
+    "Capacity prices repriced structurally ($51.89 → $179.79 Mid-Atlantic) — sustainability is the key question. " +
+    "P(15% CAGR) tightened to 35–40% post-earnings. At 31× trailing / 25–26× forward, this is a premium cyclical with structural AI tailwind, not a cheap compounder. " +
+    "March 31 Business & Earnings Outlook (first combined guidance) is the next major catalyst. RS 22 — tape not confirming.",
 
+  epsCagr: [6, 12, 17],
+  exitPE: [16, 20, 25],
+  prob: [25, 50, 25],
 
   analystConsensus: { rating: 'Buy', targetLow: 347, targetMedian: 403, targetHigh: 462, numAnalysts: 14 },
   revGrowth: [
@@ -28,26 +40,16 @@ export const CEG = defineStock({
     [0.16, 0.15, 0.14, 0.13, 0.12],
   ],
   fcfMargin: [
-    [0.104, 0.100, 0.098, 0.096, 0.095],
-    [0.123, 0.123, 0.125, 0.125, 0.127],
-    [0.141, 0.145, 0.148, 0.152, 0.155],
+    [0.040, 0.045, 0.050, 0.055, 0.060],
+    [0.051, 0.058, 0.065, 0.070, 0.075],
+    [0.060, 0.070, 0.080, 0.090, 0.100],
   ],
   exitMultiple: [13, 17, 21],
   desc: [
-    'Merchant price normalization, interconnection delays, and Calpine integration friction compress growth. Multiple reverts toward 17–18x P/E as cyclicality reasserts. Bear target ~$260 (4% EPS CAGR, 18x).',
-    'Consensus-plus execution: partial MW lever delivery, DR scaling to ~500 MW ELCC, Calpine accretion, and February 2026 guidance confirming combined FCF stability. EPS CAGR 10–12%.',
-    'Full execution: all uprates on schedule, Crane/TMI restarts, DR at 1,000 MW ELCC, signed hyperscaler PPA(s), clean Calpine integration. 16% EPS CAGR; business reclassifies as A-lite contracted infrastructure compounder at 23x.',
+    'Power price normalization from elevated 2025 levels, Calpine integration friction, and merchant gas exposure increase earnings volatility. EPS growth slows to ~6% CAGR. Market reprices to 16× as cyclicality reasserts.',
+    'Solid execution: Calpine accretion materializes, partial MW lever delivery (uprates + DR scaling), stable capacity pricing. EPS compounds at ~12% but falls short of 15% CAGR. Moderate P/E compression to 20× reflects mature premium utility status.',
+    'Full execution on all MW levers — uprates on schedule, Crane/TMI restarts, DR at 1,000 MW ELCC, signed hyperscaler PPAs, clean Calpine integration. 17% EPS CAGR; business reclassifies as contracted infrastructure compounder at 25×.',
   ],
 
   bbRate: [0.005, 0.012, 0.025],
-  bullMaOptVal: 295 * 358 * 0.05,
-
-  driverOverrides: [
-    {},
-    {},
-    {
-      revPrem: [0.015, 0.02, 0.025, 0.025, 0.025],
-      fcfUplift: [0.01, 0.01, 0.015, 0.015, 0.02],
-    },
-  ],
 });

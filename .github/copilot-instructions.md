@@ -128,10 +128,49 @@ export const TICKER = defineStock({
 5. **Two valuation models**:
    - `DCF_ADVANCED` (default): Uses revGrowth, fcfMargin, exitMultiple, termGrowth
    - `EPS_PE`: Uses baseEps, epsCagr, exitPE, prob
-6. **RS Rating tiers**: <15 very low, 15-39 low, 40-79 neutral, 80-90 strong, >90 overextended
+6. **Model selection rule** — use the decision tree below to pick the right model for each new stock
+7. **RS Rating tiers**: <15 very low, 15-39 low, 40-79 neutral, 80-90 strong, >90 overextended
 7. **Investment verdicts**: STRONG BUY / BUY / HOLD / AVOID — determined by base-case upside (>30%, >15%, near fair value, overvalued)
 8. **Prices**: Static `currentPrice` in each stock file — updated manually by request (no live price fetching)
 9. **`prob` and `epsCagr` must be integer percentages**: Use `[25, 50, 25]` not `[0.25, 0.50, 0.25]`. The model divides by 100 internally.
+
+## Model Selection Decision Tree
+
+When adding a new stock, use `EPS_PE` if **any** of these conditions is true:
+
+1. **FCF is temporarily depressed by heavy CapEx** — the company is in a major investment cycle (nuclear restarts, data center buildout, factory expansion) that compresses FCF margins below normal levels while adjusted earnings power is clear.
+   - *Examples: CLS (EMS, $1B CapEx cycle), CEG (nuclear uprates + Calpine), TLN (ECP gas plant acquisition)*
+
+2. **Debt is operational, not corporate** — for banks, lenders, and financial companies where the balance sheet "debt" is loan portfolio funding / securitization, not traditional corporate leverage. DCF subtracts net debt from enterprise value, which is conceptually wrong for lending businesses.
+   - *Examples: ENVA (securitization facilities), NU (digital banking deposits)*
+
+3. **FCF margin is structurally thin (<5%)** for the sector — EMS, contract manufacturers, and similar low-margin businesses where DCF systematically undervalues because thin FCF margins crush the present value of cash flows and the perpetuity terminal value.
+   - *Examples: CLS (EMS, 2.9-4.2% FCF margins)*
+
+4. **Massive debt on tiny float** — when debt is very large relative to market cap and share count, small changes in enterprise value create huge per-share swings. DCF bear cases can go negative.
+   - *Examples: TLN ($9.25B debt on 45.96M shares)*
+
+5. **GAAP earnings are distorted** by hedging, accounting, or one-time items — but adjusted EPS clearly shows the earnings trajectory. The EPS_PE model cuts through accounting noise.
+   - *Examples: TLN (trailing P/E 77x is hedging distortion)*
+
+6. **The investment thesis is explicitly framed in P/E terms** — the strategic narrative references forward P/E, EPS CAGR, or earnings multiples as the primary valuation framework.
+
+Use `DCF_ADVANCED` (default) when:
+- The company has healthy, representative FCF margins (>8-10%)
+- Debt is traditional corporate leverage (not operational/securitization)
+- The balance sheet is not distorted (debt < 2x market cap)
+- The investment thesis is about cash flow generation and intrinsic value
+
+**Important**: When using `DCF_ADVANCED`, always set `ebitdaProxy` explicitly. The defaults `[0.15, 0.22, 0.35]` are too low for high-margin businesses (SaaS, cybersecurity, software). Check the company's actual EBITDA margin and set accordingly.
+
+### Validation checklist for new stocks:
+- [ ] Model type matches the decision tree above
+- [ ] If DCF: `ebitdaProxy` is explicitly set (not relying on defaults)
+- [ ] If DCF: debt < 2x market cap (otherwise consider EPS_PE)
+- [ ] If DCF: FCF margin > 5% (otherwise consider EPS_PE)
+- [ ] If EPS_PE: `baseEps`, `epsCagr`, `exitPE` are all provided
+- [ ] Bear case produces a positive, plausible stock price (not negative)
+- [ ] Weighted average is directionally aligned with analyst consensus (within 50%)
 
 ## Alpha Strategic View
 
