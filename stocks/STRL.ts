@@ -19,8 +19,8 @@ export const STRL = defineStock({
   modelType: 'EPS_PE',
   baseEps: 10.44,              // FY2025 adj. EPS guidance midpoint ($10.35-$10.52)
 
-  rsRating: 80,
-  rsTrend: 'rising',
+  rsRating: 80,                 // Strong but not top-tier: 47% adj. EPS growth & beat-and-raise, but stock consolidated after run from ~$80 to $190+; needs new earnings catalyst to break higher
+  rsTrend: 'rising',            // Q3 beat + raised guidance + CEC momentum should sustain uptrend; watch today's Q4 call for re-acceleration
   aiImpact: 'TAILWIND',        // DC is 75-80% of E-Infra backlog, +125% YoY DC revenue
   strategicNarrative:
     "Sterling is a best-in-class infrastructure compounder with a structural AI/data center tailwind — E-Infrastructure (53% of revenue) delivered 42% organic growth and 28.4% operating margins in Q3, " +
