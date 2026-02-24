@@ -6,9 +6,9 @@ export const MELI = defineStock({
   sector: 'E-Commerce / Fintech',
   themeColor: '#f59e0b',
   currentPrice: 1864,
-  fairPriceRange: '$2,100 - $3,800',
+  fairPriceRange: '$2,100 - $3,750',
   shares0: 50.4,
-  rev25: 28500,
+  rev25: 28900,
   fcfMargin25: 0.085,
   taxRate: 0.20,
   cash: 4500,
@@ -16,10 +16,10 @@ export const MELI = defineStock({
   beta: 1.35,
   costDebt: 0.065,
   modelType: 'EPS_PE',
-  baseEps: 40.41,
+  baseEps: 36.69,
   rsRating: 22,
   aiImpact: 'TAILWIND',
-  strategicNarrative: "LATAM e-commerce and fintech compounder in deliberate margin-investment mode. RS 22 reflects market skepticism over Q3'25 EPS miss (-11.2%), but FCF beat +116% signals the cash machine is intact. Structural moat is infrastructure-grade — logistics, payments, lending, and marketplace flywheel with 100M annual buyers and 61M fintech MAU. Qualified buy for long-horizon investors willing to hold through EPS volatility.",
+  strategicNarrative: "LATAM e-commerce and fintech compounder in deep margin-investment mode. FY25 EPS fell to $36.69 from FY24's $37.69 despite 39% revenue growth to $28.9B — three consecutive quarterly EPS misses. Q4'25 revenue beat ($8.8B vs $8.5B est.) but EPS missed again ($8.32 vs $9.30) as EBIT margin compressed to 10.1% vs 13.5% a year ago. Credit portfolio swelled to $12.5B, driving provisions higher. RS 22 reflects justified skepticism, but top-line acceleration (44% Q4 YoY) and infrastructure moat remain intact. Qualified buy for 3-5 year horizon investors willing to hold through the earnings trough.",
 
 
   analystConsensus: { rating: 'Strong Buy', targetLow: 2600, targetMedian: 2881, targetHigh: 3500, numAnalysts: 17 },
@@ -48,7 +48,7 @@ export const MELI = defineStock({
   termGrowth: [0.02, 0.03, 0.035],
   waccAdj: [0.015, 0, -0.01],
 
-  epsCagr: [12, 20, 25],
+  epsCagr: [14, 22, 27],
   exitPE: [30, 38, 45],
   prob: [30, 45, 25],
 
