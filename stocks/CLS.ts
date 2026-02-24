@@ -5,7 +5,7 @@ export const CLS = defineStock({
   name: 'Celestica Inc.',
   sector: 'EMS',
   themeColor: '#f97316',
-  currentPrice: 294.85,
+  currentPrice: 293,
   fairPriceRange: '$150 - $180',
   shares0: 117.9,
   rev25: 12400,
@@ -17,12 +17,15 @@ export const CLS = defineStock({
   costDebt: 0.05,
   rsRating: 94,
   aiImpact: 'TAILWIND',
+  ratingOverride: 'HOLD',
   strategicNarrative:
     "Celestica is a top-tier EMS play on AI infrastructure — 800G/1.6T rack-level solutions for hyperscalers, FY25 adj EPS +56%, FCF $458M. " +
     "The problem: at 47x trailing P/E for an EMS manufacturer, the stock prices in near-perfection while a 5x CapEx jump to $1B in FY26 and 63% top-3 client concentration create real fragility. " +
     "If the AI infrastructure supercycle extends and margins normalize post-CapEx, this re-rates as a structural AI beneficiary. If CapEx cycle moderates, EMS multiples revert to 10-15x. " +
     "RS 94 confirms momentum, but the risk/reward is asymmetric to the downside at current levels.",
 
+
+  analystConsensus: { rating: 'Strong Buy', targetLow: 330, targetMedian: 387, targetHigh: 440, numAnalysts: 8 },
   revGrowth: [
     [0.30, 0.15, 0.05, 0.03, 0.02],
     [0.37, 0.35, 0.15, 0.10, 0.08],

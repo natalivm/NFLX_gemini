@@ -5,7 +5,7 @@ export const APP = defineStock({
   name: 'AppLovin Corporation',
   sector: 'Ad-Tech / AI Monetization',
   themeColor: '#f97316',
-  currentPrice: 418,
+  currentPrice: 383,
   fairPriceRange: '$310 - $836',
   shares0: 340,
   rev25: 5480,
@@ -27,6 +27,8 @@ export const APP = defineStock({
     "If self-serve + e-comm broaden the advertiser base, this is a 15%+ compounder. If ad cycle breaks, the leverage that created 84% margins works in brutal reverse. " +
     "60-65% probability of 15%+ CAGR — strong execution story, cyclical and priced for it.",
 
+
+  analystConsensus: { rating: 'Strong Buy', targetLow: 500, targetMedian: 735, targetHigh: 860, numAnalysts: 18 },
   revGrowth: [
     [0.20, 0.12, 0.10, 0.10, 0.08],
     [0.25, 0.18, 0.16, 0.15, 0.14],

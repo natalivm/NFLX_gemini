@@ -5,7 +5,7 @@ export const WWD = defineStock({
   name: 'Woodward, Inc.',
   sector: 'Aerospace & Defense',
   themeColor: '#3b82f6',
-  currentPrice: 390.92,
+  currentPrice: 380,
   fairPriceRange: '$290 – $420',
   shares0: 58.5,
   rev25: 3600,          // FY25 actual base; FY26 guide: +14–18% → ~$4.0–4.2B
@@ -33,6 +33,8 @@ export const WWD = defineStock({
   exitPE: [22, 30, 40],
   prob: [25, 50, 25],
 
+
+  analystConsensus: { rating: 'Buy', targetLow: 310, targetMedian: 355, targetHigh: 450, numAnalysts: 14 },
   revGrowth: [
     [0.07, 0.06, 0.05, 0.05, 0.04],
     [0.14, 0.12, 0.11, 0.10, 0.09],

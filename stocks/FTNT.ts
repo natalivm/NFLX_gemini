@@ -5,7 +5,7 @@ export const FTNT = defineStock({
   name: 'Fortinet',
   sector: 'Cybersecurity',
   themeColor: '#06b6d4',
-  currentPrice: 80,
+  currentPrice: 75,
   fairPriceRange: '$70 - $105',
   shares0: 743.6,
   rev25: 6800,
@@ -23,6 +23,8 @@ export const FTNT = defineStock({
     "If firewall refresh cycle + SASE convergence drives sustained mid-teens growth, this re-rates as a cybersecurity compounder. If growth stays single-digit, the premium multiple compresses. " +
     "Hold for existing positions; entry improves materially on a pullback or SASE inflection.",
 
+
+  analystConsensus: { rating: 'Hold', targetLow: 70, targetMedian: 84, targetHigh: 100, numAnalysts: 25 },
   revGrowth: [
     [0.06, 0.05, 0.05, 0.04, 0.04],
     [0.12, 0.11, 0.10, 0.09, 0.08],

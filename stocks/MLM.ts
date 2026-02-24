@@ -5,7 +5,7 @@ export const MLM = defineStock({
   name: 'Martin Marietta Materials',
   sector: 'Building Materials · Aggregates & Heavy Construction Materials',
   themeColor: '#5b7f3b',
-  currentPrice: 686,
+  currentPrice: 679,
   fairPriceRange: '$420 - $1120',
   shares0: 60.3,               // ~60.3M shares (market cap $41.4B / $686)
   rev25: 6150,                 // Revenue 2025A ($M)
@@ -46,6 +46,8 @@ export const MLM = defineStock({
   prob: [30, 45, 25],          // ~25-30% prob of 15%+ CAGR (bull only, and barely)
 
   // ── DCF backup scenarios ──
+
+  analystConsensus: { rating: 'Buy', targetLow: 605, targetMedian: 684, targetHigh: 780, numAnalysts: 16 },
   revGrowth: [
     [0.05, 0.04, 0.03, 0.03, 0.03],        // Bear: slow recovery, housing drag persists, infra plateaus
     [0.108, 0.073, 0.06, 0.06, 0.05],       // Base: consensus recovery (2026 +10.8%, 2027 +7.3%), then normalizes
