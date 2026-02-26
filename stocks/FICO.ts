@@ -34,7 +34,7 @@ export const FICO = defineStock({
     [0.38, 0.39, 0.40, 0.40, 0.40],
   ],
   exitMultiple: [25, 30, 32],
-  bbRate: [0.005, 0.025, 0.02],
+  bbRate: [0.005, 0.04, 0.02],
 
   epsCagr: [11, 19, 20],
   exitPE: [25, 30, 32],
