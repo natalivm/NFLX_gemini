@@ -3,6 +3,7 @@ import { defineStock } from './defineStock';
 export const EME = defineStock({
   ticker: 'EME',
   name: 'EMCOR Group, Inc.',
+  updatedOn: '26/02',
   sector: 'Facilities Services · Data Center Infrastructure',
   themeColor: '#22d3ee',
   currentPrice: 726,
