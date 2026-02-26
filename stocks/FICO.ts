@@ -5,7 +5,8 @@ export const FICO = defineStock({
   name: 'Fair Isaac Corp',
   sector: 'Analytics',
   themeColor: '#2979ff',
-  currentPrice: 1282,
+  currentPrice: 1385,
+  updatedOn: '26/02',
   fairPriceRange: '$1,736 - $3,282',
   shares0: 23.72,
   rev25: 1990,
@@ -34,7 +35,7 @@ export const FICO = defineStock({
     [0.38, 0.39, 0.40, 0.40, 0.40],
   ],
   exitMultiple: [25, 30, 32],
-  bbRate: [0.005, 0.025, 0.02],
+  bbRate: [0.005, 0.04, 0.02],
 
   epsCagr: [11, 19, 20],
   exitPE: [25, 30, 32],
