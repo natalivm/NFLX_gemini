@@ -26,12 +26,12 @@ export const KLAC = defineStock({
     "Earnings call confirms structural demand: WFE 2026 total mid-$130B (core low $120B + AP ~$12B), 1H26 virtually sold out with growing lead times, 2H26 acceleration. HBM intensity, advanced packaging (facility-constrained), and EUV layers all drive process control intensity higher. " +
     "Revenue CAGR ~13.6% (FY25–30E) with EPS growing faster at ~20% CAGR via margin expansion, buybacks, and operating leverage. Service business targets 12–14% long-term growth (upper end). GM ~62% in 2026, long-term 63%+. " +
     "Near-term headwinds: DRAM chip costs (~75–100 bps) and tariffs (~50–100 bps) pressure 2026 gross margins. China exposure mid/high-20% of revenue — any tightening of restrictions is a material risk. " +
-    "At ~50x trailing P/E and ~41x forward, the stock prices in the strong phase of the semicap cycle. Base case delivers ~9–10% CAGR. Probability of 15%+ CAGR: ~30–35%. " +
+    "At ~50x trailing P/E and ~41x forward, the stock prices in the strong phase of the semicap cycle. Expected total return ~10% CAGR. Probability of 15%+ CAGR: ~25%. " +
     "High-quality cyclical champion at full price. Best entry on cycle correction below $1,100.",
 
-  epsCagr: [10, 18, 22],
+  epsCagr: [10, 17, 22],
   exitPE: [25, 32, 40],
-  prob: [20, 50, 30],
+  prob: [15, 60, 25],
 
   analystConsensus: { rating: 'Buy', targetLow: 1200, targetMedian: 1600, targetHigh: 2000, numAnalysts: 20 },
   revGrowth: [
@@ -54,9 +54,9 @@ export const KLAC = defineStock({
       'Stress test: FY26 EPS $36.45 × 22x = $802 — a −48% drawdown from a normal cycle pause.',
     'Normal semicap cycle plays out: WFE grows to mid-$130B in 2026 per management guidance, with 2H26 acceleration. ' +
       'Memory WFE (DRAM) grows 15–20%, Foundry/Logic 10–15%. HBM + advanced packaging drive process control intensity higher. ' +
-      'EBIT margins expand from 43% toward 49% by 2030 on operating leverage. GM headwinds from DRAM costs and tariffs normalize by mid-2027. ' +
-      'EPS compounds at 18% annually to ~$75 by 2030. At 32x exit, target $2,400 — annualized return ~9–10%. ' +
-      'Multiple compression from 41x to 32x limits total return. The market already prices the earnings trajectory.',
+      'EBIT margins expand from 43% toward 47–49% by 2030. GM headwinds from DRAM costs and tariffs normalize by mid-2027. ' +
+      'Blended scenario: EPS compounds at ~17% annually to ~$68–75 by 2030. At 32x exit, target ~$2,200–2,400. ' +
+      'Multiple compression from 41x to 32–35x limits total return to ~8–10% annualized. The market already prices most of the earnings trajectory.',
     'AI supercycle extends through 2028–2029: EUV, advanced packaging (facility-constrained per call), and HBM drive disproportionate inspection demand. ' +
       'Service business grows at upper end of 12–14% target, share gains in reticle, e-beam, AP, and BBP segments. ' +
       'EBIT margins expand aggressively toward 49%+, buybacks accelerate EPS growth beyond revenue. Long-term GM reaches 63%+. ' +
@@ -76,7 +76,7 @@ export const KLAC = defineStock({
       'Revenue CAGR ~13.6% supported by WFE growing to mid-$130B in 2026 (Memory 15–20%, Foundry/Logic 10–15%). ' +
       'EPS outgrows revenue at ~18% via operating leverage + buybacks. GM ~62% targeting 63%+ long-term, EBIT ~43%, ROE >100%. ' +
       'But the market prices this trajectory: forward P/E compresses from 41x (FY26) to 32x (FY30). ' +
-      'Returns limited by multiple compression. For 12% CAGR, entry below $1,200 needed.',
+      'Returns limited by multiple compression. Expected total return ~10% CAGR, P(15%+) ~25%. For 12% CAGR, entry below $1,200 needed.',
     'AI capex extends beyond 2028: HBM intensity (less redundancy, more metallization, EUV layers), advanced packaging ' +
       '(facility-constrained per call — demand > supply), and 2nm/below create entirely new inspection TAM. ' +
       'Share gains confirmed in reticle, e-beam, AP, and BBP. Service business targets upper end of 12–14% growth. ' +
